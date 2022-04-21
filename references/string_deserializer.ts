@@ -6,7 +6,7 @@ import { decode32 as varintDecode } from "https://deno.land/x/varint@v2.0.0/vari
  * @returns { string } deserialized string
  */
 export function deserializeV8String(data: Uint8Array): string {
-  if (data[0] !== 34) throw new Error("Not a v8 string");
+  if (data[0] !== 0x21) throw new Error("Not a v8 string");
 
   const [stringLength, bytesUsed] = varintDecode(data, 1);
   const stringData = data.subarray(bytesUsed, bytesUsed + stringLength);

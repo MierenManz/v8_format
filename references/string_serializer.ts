@@ -9,7 +9,7 @@ export function serializeIntoV8String(data: string): Uint8Array {
   const stringEncoded = new TextEncoder().encode(data);
 
   const serializedData = new Uint8Array(length + stringEncoded.length + 1);
-  serializedData[0] = 34;
+  serializedData[0] = 0x21;
   serializedData.set(varintBytes, 1);
   serializedData.set(stringEncoded, length + 1);
 
