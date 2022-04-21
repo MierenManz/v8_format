@@ -9,7 +9,7 @@ export function serializeJsString(data: string): Uint8Array {
   const stringEncoded = new TextEncoder().encode(data);
 
   const serializedData = new Uint8Array(length + stringEncoded.length + 1);
-  serializedData[0] = 0x21;
+  serializedData[0] = 0x22;
   serializedData.set(varintBytes, 1);
   serializedData.set(stringEncoded, length + 1);
 

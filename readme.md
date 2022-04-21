@@ -11,7 +11,7 @@ of bytes.
 
 | Datatype       | Indicator |
 | -------------- | --------- |
-| string         | " (0x21)  |
+| string         | " (0x22)  |
 | Int            | I (0x49)  |
 | Float          | N (0x4E)  |
 | Null           | 0 (0x30)  |
@@ -23,7 +23,7 @@ Note to self. Add binary data like Uint8Array aswell
 
 ## String Format
 
-Each string starts off with a `"` (0x21) to indicate the string datatype. Then
+Each string starts off with a `"` (0x22) to indicate the string datatype. Then
 uses a LEB128 encoded varint to indicate the length of the data of the string.
 Then the string data comes in.
 
@@ -31,7 +31,7 @@ serializing a string like `HelloWorld` this will look like this.
 
 ```
 0xFF  0x0F    Magic bytes
-0x21  0x0A    String indicator byte and varint encoded length
+0x22  0x0A    String indicator byte and varint encoded length
 0x48  0x65    He
 0x6C  0x6C    ll
 0x6F  0x57    oW
