@@ -3,7 +3,7 @@
 Idk why I am doing this. But this "guide" explains the v8 internal binary format
 used by the (V8 Engine)[https://v8.dev]
 
-# General format
+## General Format
 
 The format always starts with 2 magic bytes `0xFF 0x0F` Then it will use a
 indicator byte to tell the deserializer on how to deserialize the next section
@@ -12,7 +12,7 @@ of bytes.
 | Datatype       | Indicator |
 | -------------- | --------- |
 | string         | " (0x21)  |
-| Int Signed     | I (0x49)  |
+| Int            | I (0x49)  |
 | Float          | N (0x4E)  |
 | Null           | 0 (0x30)  |
 | Undefined      | _ (0x5F)  |
@@ -21,7 +21,7 @@ of bytes.
 
 Note to self. Add binary data like Uint8Array aswell
 
-## String format
+## String Format
 
 Each string starts off with a `"` (0x21) to indicate the string datatype. Then
 uses a LEB128 encoded varint to indicate the length of the data of the string.
@@ -37,4 +37,35 @@ serializing a string like `HelloWorld` this will look like this.
 0x6F  0x57    oW
 0x6F  0x72    or
 0x6C  0x64    ld
+```
+
+## Integer Format
+
+The integer format of v8 is quite simple but confusing at first. It uses varint
+encoding for all signed integers. If you have ever worked with varint then you
+know that this is not possible with varint. So to avoid this trouble we first
+zigzag encode integers and then we encode it into a varint
+
+some examples
+
+Negative Integer -12
+
+```
+0xFF  0x0F    Magic bytes
+0x49  0x17    Indicator byte and varint encoded value
+```
+
+Positive Integer 12
+
+```
+```
+
+i32 MIN
+
+```
+```
+
+i32 MAX
+
+```
 ```
