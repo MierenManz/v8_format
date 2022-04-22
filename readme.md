@@ -58,14 +58,6 @@ Negative Integer -12
 Positive Integer 12
 
 ```
-```
-
-i32 MIN
-
-```
-```
-
-i32 MAX
-
-```
+0xFF  0x0F    Magic bytes
+0x49  0x18    Indicator byte and varint encoded value
 ```
