@@ -79,5 +79,5 @@ indicator byte `N` (0x4E) and then the float value as 64 bit float (or double)
 ## Null and Undefined Format
 
 If you thought that the float format was simple, null and undefined are even
-easier. They both only have a indication byte. Which is `0` (0x30) or `_` (0x5F)
-for undefined
+easier. They both only have a indication byte. Which is `0` (0x30) for null and
+`_` (0x5F) for undefined
