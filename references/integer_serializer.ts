@@ -9,6 +9,10 @@ export function serializeJsInteger(value: number): Uint8Array {
     throw new Error("Outside of the integer range");
   }
 
+  if (!Number.isInteger(value)) {
+    throw new Error("Not a integer");
+  }
+
   // ZigZag Encode
   const v = (value >> 31) ^ (value << 1);
 
