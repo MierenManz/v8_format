@@ -1,6 +1,6 @@
 /**
  * This function assumes that there is no magic bytes and the first element is the type indicator
- * @param { Uint8Array } data - Serialized integer data
+ * @param { Uint8Array } data - Serialized null or undefined data
  * @returns { number } Deserialized integer
  */
 export function deserializeV8NullOrUndefined(
