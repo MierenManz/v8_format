@@ -1,4 +1,7 @@
-import { encode as varintEncode } from "https://deno.land/x/varint@v2.0.0/varint.ts";
+import {
+  decode32 as varintDecode,
+  encode as varintEncode,
+} from "https://deno.land/x/varint@v2.0.0/varint.ts";
 
 /**
  * @param { number } value - Integer To Serialize
@@ -24,4 +27,18 @@ export function serializeJsInteger(value: number): Uint8Array {
   buffer.set(varintBytes, 1);
 
   return buffer;
+}
+
+/**
+ * This function assumes that there is no magic bytes and the first element is the type indicator
+ * @param { Uint8Array } data - Serialized integer data
+ * @returns { number } Deserialized integer
+ */
+export function deserializeV8Integer(data: Uint8Array): number {
+  if (data[0] !== 0x49) throw new Error("Not a v8 integer");
+  //   Varint Decode
+  const rawValue = varintDecode(data.subarray(1))[0];
+
+  //   ZigZag Decode
+  return (rawValue >> 1) ^ -(rawValue & 1);
 }
