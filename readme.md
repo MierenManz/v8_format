@@ -61,3 +61,17 @@ Positive Integer 12
 0xFF  0x0F    Magic bytes
 0x49  0x18    Indicator byte and varint encoded value
 ```
+
+## Float Format
+
+The float format is by far the easiest one to understand. You only have an
+indicator byte `N` (0x4E) and then the float value as 64 bit float (or double)
+
+```
+0xFF  0x0F    Magic bytes
+0x4E  0x00    Indicator byte and first byte of the 64 bit float
+0x00  0x00    bytes of the float
+0x00  0x00
+0x00  0x29
+0x40
+```
