@@ -3,7 +3,7 @@ import { decode32 as varintDecode } from "https://deno.land/x/varint@v2.0.0/vari
 /**
  * This function assumes that there is no magic bytes and the first element is the type indicator
  * @param { Uint8Array } data - Serialized integer data
- * @returns { number } deserialized integer
+ * @returns { number } Deserialized integer
  */
 export function deserializeV8Integer(data: Uint8Array): number {
   if (data[0] !== 0x49) throw new Error("Not a v8 integer");
