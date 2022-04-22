@@ -17,7 +17,7 @@ of bytes.
 | Null           | 0 (0x30)  |
 | Undefined      | _ (0x5F)  |
 | Array          | A (0x41)  |
-| Object Literal | { (0x7B)  |
+| Object Literal | o (0x7B)  |
 
 Note to self. Add binary data like Uint8Array aswell
 
