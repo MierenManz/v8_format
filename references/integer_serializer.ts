@@ -1,8 +1,8 @@
 import { encode as varintEncode } from "https://deno.land/x/varint@v2.0.0/varint.ts";
 
 /**
- * @param { number } value Integer To Serialize
- * @returns { Uint8Array } Serialized JS Integer
+ * @param { number } value - Integer To Serialize
+ * @returns { Uint8Array } Serialized JS Integer without magic bytes
  */
 export function serializeJsInteger(value: number): Uint8Array {
   if (value < -1_073_741_824 || value > 1_073_741_823) {

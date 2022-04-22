@@ -1,8 +1,8 @@
 import { encode as varintEncode } from "https://deno.land/x/varint@v2.0.0/varint.ts";
 
 /**
- * @param { string } data - deserialized string
- * @returns { Uint8Array } serialized string without magic bytes
+ * @param { string } data - String To Serialize
+ * @returns { Uint8Array } Serialized string without magic bytes
  */
 export function serializeJsString(data: string): Uint8Array {
   const [varintBytes, length] = varintEncode(data.length);
