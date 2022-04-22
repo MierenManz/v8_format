@@ -13,6 +13,7 @@ of bytes.
 | -------------- | --------- |
 | string         | " (0x22)  |
 | Int            | I (0x49)  |
+| BigInt         | Z (0x5A)  |
 | Float          | N (0x4E)  |
 | Null           | 0 (0x30)  |
 | Undefined      | _ (0x5F)  |
@@ -61,6 +62,37 @@ Positive Integer 12
 0xFF  0x0F    Magic bytes
 0x49  0x18    Indicator byte and varint encoded value
 ```
+
+## BigInt Format
+
+The bigint format is a mix between the integer format and float format. It has a
+indicator byte which is `Z` (0x5A) and after that a varint bitfield specifying
+how many bytes it uses and if the value is positive or negative. It is alot more
+complex than either a float or integer because it has a unknown size
+
+Negative BigInt -12
+
+```
+0xFF  0x0F    Magic bytes
+0x11  0x0C    Varint bitfield. Bigint value
+0x00  0x00    Bigint value...
+0x00  0x00
+0x00  0x00
+```
+
+Positive BigInt 12
+
+```
+0xFF  0x0F    Magic bytes
+0x10  0x0C    Varint bitfield. Bigint value
+0x00  0x00    Bigint value...
+0x00  0x00
+0x00  0x00
+```
+
+As you can see both are the same and the only difference is the bitfield. In the
+negative it changed the LSB (Least significant byte) from a 0 to a 1 making it a
+negative value
 
 ## Float Format
 
