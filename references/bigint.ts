@@ -12,7 +12,9 @@ export function serializeJsBigInt(value: bigint): Uint8Array {
   // Construct a new u64 array
   const bigintArray = [];
 
+  // Bitshift by 64 bits until value is 0
   while (value !== 0n) {
+    // Push u64's
     bigintArray.push(BigInt.asUintN(64, value));
     value >>= 64n;
   }
@@ -24,10 +26,9 @@ export function serializeJsBigInt(value: bigint): Uint8Array {
 
   // encode bitfield bytes into a varint
   const [bitfieldVarintBytes] = varintEncode(bitfield);
+  const arrayLength = 1 + bitfieldVarintBytes.length + bigintArray.length * 8;
   // Create serialized data
-  const serializedData = new Uint8Array(
-    1 + bitfieldVarintBytes.length + bigintArray.length * 8,
-  );
+  const serializedData = new Uint8Array(arrayLength);
 
   // Set indicator byte
   serializedData[0] = 0x5A;
