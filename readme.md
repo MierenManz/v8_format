@@ -1,7 +1,7 @@
 # Explaination
 
 Idk why I am doing this. But this "guide" explains the v8 internal binary format
-used by the (V8 Engine)[https://v8.dev]
+used by the [V8 Engine](https://v8.dev)
 
 ## General Format
 
