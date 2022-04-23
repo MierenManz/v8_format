@@ -46,6 +46,11 @@ export function serializeJsBigInt(value: bigint): Uint8Array {
   return serializedData;
 }
 
+/**
+ * This function assumes that there is no magic bytes and the first element is the type indicator
+ * @param { Uint8Array } data - Serialized BigInt data
+ * @returns { BigInt } Deserialized BigInt
+ */
 export function deserializeV8BigInt(data: Uint8Array): bigint {
   if (data[0] !== 0x5A) throw new Error("Not a v8 bigint");
   // Decode varint bitfield

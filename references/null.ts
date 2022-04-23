@@ -13,7 +13,7 @@ export function serializeJsNull(val: null): Uint8Array {
 /**
  * This function assumes that there is no magic bytes and the first element is the type indicator
  * @param { Uint8Array } data - Serialized null data
- * @returns { number } Deserialized null
+ * @returns { null } Deserialized null
  */
 export function deserializeV8Null(
   data: Uint8Array,
