@@ -9,16 +9,17 @@ The format always starts with 2 magic bytes `0xFF 0x0F` Then it will use a
 indicator byte to tell the deserializer on how to deserialize the next section
 of bytes.
 
-| Datatype       | Indicator |
-| -------------- | --------- |
-| string         | " (0x22)  |
-| Int            | I (0x49)  |
-| BigInt         | Z (0x5A)  |
-| Float          | N (0x4E)  |
-| Null           | 0 (0x30)  |
-| Undefined      | _ (0x5F)  |
-| Array          | A (0x41)  |
-| Object Literal | o (0x7B)  |
+| Datatype       | Indicator            |
+| -------------- | -------------------- |
+| string         | " (0x22)             |
+| Int            | I (0x49)             |
+| BigInt         | Z (0x5A)             |
+| Float          | N (0x4E)             |
+| Boolean        | T (0x54) or F (0x46) |
+| Null           | 0 (0x30)             |
+| Undefined      | _ (0x5F)             |
+| Array          | A (0x41)             |
+| Object Literal | o (0x7B)             |
 
 Note to self. Add binary data like Uint8Array aswell
 
@@ -106,6 +107,26 @@ indicator byte `N` (0x4E) and then the float value as 64 bit float (or double)
 0x00  0x00
 0x00  0x29
 0x40
+```
+
+## Boolean Format
+
+Booleans are the easiest format to serialize. The indicator byte is both the
+value and type. `F` (0x46) and `T` (0x54) Are the boolean type indicators where
+`F` (0x46) is false and `T` (0x54) is true
+
+False
+
+```
+0xFF  0x0F    Magic bytes
+0x46          Indicator byte False
+```
+
+True
+
+```
+0xFF  0x0F    Magic bytes
+0x54          Indicator byte True
 ```
 
 ## Null and Undefined Format
