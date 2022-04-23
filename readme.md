@@ -75,20 +75,22 @@ Negative BigInt -12
 
 ```
 0xFF  0x0F    Magic bytes
-0x11  0x0C    Varint bitfield. Bigint value
-0x00  0x00    Bigint value...
+0x5A  0x11    BigInt indicator byte and Varint bitfield.
+0x0C  0x00    Bigint value...
 0x00  0x00
 0x00  0x00
+0x00
 ```
 
 Positive BigInt 12
 
 ```
 0xFF  0x0F    Magic bytes
-0x10  0x0C    Varint bitfield. Bigint value
-0x00  0x00    Bigint value...
+0x5A  0x10    BigInt indicator byte and Varint bitfield.
+0x0C  0x00    Bigint value...
 0x00  0x00
 0x00  0x00
+0x00
 ```
 
 As you can see both are the same and the only difference is the bitfield. In the
