@@ -3,17 +3,20 @@ import {
   encode as varintEncode,
 } from "https://deno.land/x/varint@v2.0.0/varint.ts";
 
+const MIN_INT_VALUE = -1_073_741_824;
+const MAX_INT_VALUE = 1_073_741_823;
+
 /**
  * @param { number } value - Integer To Serialize
  * @returns { Uint8Array } Serialized JS Integer without magic bytes
  */
 export function serializeJsInteger(value: number): Uint8Array {
-  if (value < -1_073_741_824 || value > 1_073_741_823) {
-    throw new Error("Outside of the integer range");
-  }
-
   if (!Number.isInteger(value)) {
     throw new Error("Not a integer");
+  }
+
+  if (value < MIN_INT_VALUE || value > MAX_INT_VALUE) {
+    throw new Error("Outside of the integer range");
   }
 
   // ZigZag Encode
