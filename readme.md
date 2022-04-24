@@ -1,4 +1,4 @@
-# Explaination
+# Explanation
 
 Idk why I am doing this. But this "guide" explains the v8 internal binary format
 used by the (V8 Engine)[https://v8.dev]
@@ -105,7 +105,7 @@ indicator byte `N` (0x4E) and then the float value as 64 bit float (or double)
 ```
 0xFF  0x0F    Magic bytes
 0x4E  0x00    Indicator byte and first byte of the 64 bit float
-0x00  0x00    bytes of the float
+0x00  0x00    bytes of the float(12.69)
 0x00  0x00
 0x00  0x29
 0x40
