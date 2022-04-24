@@ -9,7 +9,7 @@ import { deserializeV8Null, serializeJsNull } from "../references/null.ts";
 const DENO_CORE = (Deno as any).core;
 
 Deno.test({
-  name: "Deserialize null",
+  name: "Deserialize Null",
   fn: async function (t) {
     await t.step({
       name: "Deserialize Null",

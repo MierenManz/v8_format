@@ -12,7 +12,7 @@ import {
 const DENO_CORE = (Deno as any).core;
 
 Deno.test({
-  name: "Deserialize undefined",
+  name: "Deserialize Undefined",
   fn: async function (t) {
     await t.step({
       name: "Deserialize Undefined",
