@@ -131,8 +131,22 @@ True
 0x54          Indicator byte True
 ```
 
-## Null and Undefined Format
+## Null Format
 
-If you thought that the float format was simple, null and undefined are even
-easier. They both only have a indication byte. Which is `0` (0x30) for null and
-`_` (0x5F) for undefined
+The null format is effectively the same as the boolean format. Just that the
+indicator byte changed to `0` (0x30).
+
+```
+0xFF  0x0F    Magic bytes
+0x30          Indicator byte Null
+```
+
+## Undefined Format
+
+Let's repeat the easiest format once again. For `undefined` the format is still
+the same as null and booleans but the byte changed once again to `_` (0x5F)
+
+```
+0xFF  0x0F    Magic bytes
+0x5F          Indicator byte Undefined
+```
