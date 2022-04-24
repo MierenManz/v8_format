@@ -8,6 +8,7 @@ import {
  * @returns { Uint8Array } Serialized JS BigInt without magic bytes
  */
 export function serializeJsBigInt(value: bigint): Uint8Array {
+  if (typeof value !== "bigint") throw new Error("Not a BigInt");
   // Check if the value is negative
   const isNegative = value < 0n;
   // make the value positive if negative
