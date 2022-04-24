@@ -2,7 +2,7 @@
  * @param { undefined } val - undefined To Serialize
  * @returns { Uint8Array } Serialized undefined
  */
-export function serializeJsNull(val?: undefined): Uint8Array {
+export function serializeJsUndefined(val?: undefined): Uint8Array {
   if (val === undefined) {
     return new Uint8Array([0x5F]);
   }
@@ -15,7 +15,7 @@ export function serializeJsNull(val?: undefined): Uint8Array {
  * @param { Uint8Array } data - Serialized undefined data
  * @returns { undefined } Deserialized undefined
  */
-export function deserializeV8Null(
+export function deserializeV8Undefined(
   data: Uint8Array,
 ): undefined {
   if (data[0] === 0x5F) return undefined;
