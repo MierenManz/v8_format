@@ -1,33 +1,41 @@
 # Explanation
 
-Idk why I am doing this. But this "guide" explains the v8 internal binary format
-used by the (V8 Engine)[https://v8.dev]
+Idk why I am doing this. But this "guide" shows how to serialize js values into
+their v8 binary representation and how to deserialize the v8 binary
+representation back to a js value used by the (V8 Engine)[https://v8.dev]
 
 ## General Format
 
-The format always starts with 2 magic bytes `0xFF 0x0F` Then it will use a
+The format always starts with 2 header bytes `0xFF 0x0F` Then it will use a
 indicator byte to tell the deserializer on how to deserialize the next section
-of bytes.
+of bytes. All format examples include the 2 header bytes but these are only
+needed at the beginning of the whole serialized data, not per format. The
+reference serializers and deserializers don't include these bytes and only have
+to be checked to be valid.
 
-| Datatype       | Indicator            |
-| -------------- | -------------------- |
-| string         | " (0x22)             |
-| Int            | I (0x49)             |
-| BigInt         | Z (0x5A)             |
-| Float          | N (0x4E)             |
-| Boolean        | T (0x54) or F (0x46) |
-| Null           | 0 (0x30)             |
-| Undefined      | _ (0x5F)             |
-| Array          | A (0x41)             |
-| Object Literal | o (0x7B)             |
+## String Formats
 
-Note to self. Add binary data like Uint8Array aswell
+V8 has 3 types of strings. `Utf8String`, `OneByteString` and `TwoByteString`.
+The first one I have no idea what it is used for.
 
-## String Format
+The One byte string is the most common one and is used in places where every
+character in the string is part of the extended ascii table (0x00 up to 0xFF)
 
-Each string starts off with a `"` (0x22) to indicate the string datatype. Then
-uses a LEB128 encoded varint to indicate the length of the data of the string.
-Then the string data comes in.
+The Two Byte string is used for characters that need 2 bytes to be represented.
+This would include character sets like arabic and emoji's
+
+All format's all start with a type indicator and then a varint encoded length
+and then the raw data
+
+### Utf8 String Format
+
+I have not looked into this yet.
+
+### One Byte String Format
+
+One byte strings start off with a `"` (0x22) to indicate the string datatype.
+Then uses a LEB128 encoded varint to indicate the length of the raw data of the
+string and then the raw data.
 
 serializing a string like `HelloWorld` this will look like this.
 
@@ -41,7 +49,29 @@ serializing a string like `HelloWorld` this will look like this.
 0x6C  0x64    ld
 ```
 
+### Two Byte String Format
+
+Two byte strings start off with a `c` (0x63) to indicate the two byte string
+datatype. Then uses a LEB128 encoded varint to indicate the length of the raw
+data of the string and then the raw data.
+
+This format is used for when we have characters that need to be represented as
+multiple bytes. Like emoji's or non-latin languages like arabic
+
+(this still needs a example)
+
 ## Integer Format
+
+V8 has 2 integer formats one is unsigned integer and the other one signed. It
+appears that usually signed integers are used even when unsigned integers can be
+used.
+
+I am not entirely sure when unsigned integers are used. Not only is this a small
+quirk but due to the max value of a varint we don't get the full i32 range to
+work with. But rather a range of `-1_073_741_824` (inclusive) up to
+`1_073_741_823` (inclusive) Outside of this range the float format will be used!
+
+### Signed Integer Format
 
 The integer format of v8 is quite simple but confusing at first. It uses varint
 encoding for all signed integers. If you have ever worked with varint then you
@@ -64,9 +94,17 @@ Positive Integer 12
 0x49  0x18    Indicator byte and varint encoded value
 ```
 
+### Unsigned Integer Format
+
+Eventho I have not found out how this works. It is essentially the same as the
+signed int format but a different indicator byte `U` (0x) and the value does not
+get zig-zag encoded like the signed int's do
+
+(this still needs a example)
+
 ## BigInt Format
 
-The bigint format is a mix between the integer format and float format. It has a
+The bigint format does not have multiple variants and only has one. It has a
 indicator byte which is `Z` (0x5A) and after that a varint bitfield specifying
 how many bytes it uses and if the value is positive or negative. It is alot more
 complex than either a float or integer because it has a unknown size
@@ -99,8 +137,10 @@ negative value
 
 ## Float Format
 
-The float format is by far the easiest one to understand. You only have an
-indicator byte `N` (0x4E) and then the float value as 64 bit float (or double)
+The float format is like the bigint format quite easy to understand. It's a
+little bit simpler because we don't deal with a variable size of bytes. The
+float format is by far the easiest one to understand. You only have an indicator
+byte `N` (0x4E) and then the float value as 64 bit float (or double)
 
 ```
 0xFF  0x0F    Magic bytes
