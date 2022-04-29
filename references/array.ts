@@ -13,6 +13,9 @@ export function serializeJsArray<T>(
   // deno-lint-ignore ban-types
   objRefs: {}[] = [array],
 ): Uint8Array {
+  if (!Array.isArray(array)) {
+    throw new Error("Not a JS array");
+  }
   // parse metadata from array
   const metadata = arrayMetadata(array);
   const indicatorByte = metadata.isSparse ? 0x61 : 0x41;
