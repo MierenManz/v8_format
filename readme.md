@@ -2,7 +2,7 @@
 
 Idk why I am doing this. But this "guide" shows how to serialize js values into
 their v8 binary representation and how to deserialize the v8 binary
-representation back to a js value used by the (V8 Engine)[https://v8.dev]
+representation back to a js value used by the [V8 Engine](https://v8.dev).
 
 ## General Format
 
