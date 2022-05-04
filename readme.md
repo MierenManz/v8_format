@@ -13,7 +13,25 @@ needed at the beginning of the whole serialized data, not per format. The
 reference serializers and deserializers don't include these bytes and only have
 to be checked to be valid.
 
-## String Formats
+## Primitive Types
+
+Primitive values are the following values:
+
+- [string](#string-formats)
+- [integers](#integer-format)
+- [float](#float-format)
+- [bigint](#bigint-format)
+- [boolean](#boolean-format)
+- [null](#null-format)
+- [undefined](#undefined-format)
+
+Null is also included in this list eventho they're technically objects. The
+difference between a primitive and a object is for example how they're passed as
+function argument. It is handy to know the difference because objects have a few
+quirks that primitives don't. But we'll get into that later in the
+[Object Types](#object-types) section.
+
+### String Formats
 
 V8 has 3 types of strings. `Utf8String`, `OneByteString` and `TwoByteString`.
 The first one I have no idea what it is used for.
@@ -27,11 +45,11 @@ This would include character sets like arabic and emoji's
 All format's all start with a type indicator and then a varint encoded length
 and then the raw data
 
-### Utf8 String Format
+#### Utf8 String Format
 
 I have not looked into this yet.
 
-### One Byte String Format
+#### One Byte String Format
 
 One byte strings start off with a `"` (0x22) to indicate the string datatype.
 Then uses a LEB128 encoded varint to indicate the length of the raw data of the
@@ -49,7 +67,7 @@ serializing a string like `HelloWorld` this will look like this.
 0x6C  0x64    ld
 ```
 
-### Two Byte String Format
+#### Two Byte String Format
 
 Two byte strings start off with a `c` (0x63) to indicate the two byte string
 datatype. Then uses a LEB128 encoded varint to indicate the length of the raw
@@ -60,7 +78,7 @@ multiple bytes. Like emoji's or non-latin languages like arabic
 
 (this still needs a example)
 
-## Integer Format
+### Integer Format
 
 V8 has 2 integer formats one is unsigned integer and the other one signed. It
 appears that usually signed integers are used even when unsigned integers can be
@@ -71,12 +89,12 @@ quirk but due to the max value of a varint we don't get the full i32 range to
 work with. But rather a range of `-1_073_741_824` (inclusive) up to
 `1_073_741_823` (inclusive) Outside of this range the float format will be used!
 
-### Signed Integer Format
+#### Signed Integer Format
 
 The integer format of v8 is quite simple but confusing at first. It uses varint
 encoding for all signed integers. If you have ever worked with varint then you
 know that this is not possible with varint. So to avoid this trouble we first
-zigzag encode integers and then we encode it into a varint
+zigzag encode integers and then we encode it into a varint.
 
 some examples
 
@@ -84,25 +102,27 @@ Negative Integer -12
 
 ```
 0xFF  0x0F    Magic bytes
-0x49  0x17    Indicator byte and varint encoded value
+0x49  0x17    Indicator byte then zigzag encoded + varint encoded value
 ```
 
 Positive Integer 12
 
 ```
 0xFF  0x0F    Magic bytes
-0x49  0x18    Indicator byte and varint encoded value
+0x49  0x18    Indicator byte then zigzag encoded + varint encoded value
 ```
 
-### Unsigned Integer Format
+#### Unsigned Integer Format
 
-Eventho I have not found out how this works. It is essentially the same as the
-signed int format but a different indicator byte `U` (0x) and the value does not
-get zig-zag encoded like the signed int's do
+Eventho I have not found out where v8 uses this. It is essentially the same as
+the signed int format but a different indicator byte `U` (0x) and the value does
+not get zig-zag encoded unlike the signed integers.\
+Do note that this format is not compatible with the Signed integer format
+because positive integers in that format also get zigzag encoded.
 
-(this still needs a example)
+(this still needs a example once I know where v8 uses this format)
 
-## BigInt Format
+### BigInt Format
 
 The bigint format does not have multiple variants and only has one. It has a
 indicator byte which is `Z` (0x5A) and after that a varint bitfield specifying
@@ -135,9 +155,9 @@ As you can see both are the same and the only difference is the bitfield. In the
 negative it changed the LSB (Least significant byte) from a 0 to a 1 making it a
 negative value
 
-## Float Format
+### Float Format
 
-The float format is like the bigint format quite easy to understand. It's a
+The float format is like the integer format, quite easy to understand. It's a
 little bit simpler because we don't deal with a variable size of bytes. The
 float format is by far the easiest one to understand. You only have an indicator
 byte `N` (0x4E) and then the float value as 64 bit float (or double)
@@ -151,7 +171,7 @@ byte `N` (0x4E) and then the float value as 64 bit float (or double)
 0x40
 ```
 
-## Boolean Format
+### Boolean Format
 
 Booleans are the easiest format to serialize. The indicator byte is both the
 value and type. `F` (0x46) and `T` (0x54) Are the boolean type indicators where
@@ -171,7 +191,7 @@ True
 0x54          Indicator byte True
 ```
 
-## Null Format
+### Null Format
 
 The null format is effectively the same as the boolean format. Just that the
 indicator byte changed to `0` (0x30).
@@ -181,7 +201,7 @@ indicator byte changed to `0` (0x30).
 0x30          Indicator byte Null
 ```
 
-## Undefined Format
+### Undefined Format
 
 Let's repeat the easiest format once again. For `undefined` the format is still
 the same as null and booleans but the byte changed once again to `_` (0x5F)
@@ -190,3 +210,5 @@ the same as null and booleans but the byte changed once again to `_` (0x5F)
 0xFF  0x0F    Magic bytes
 0x5F          Indicator byte Undefined
 ```
+
+## Object Types
