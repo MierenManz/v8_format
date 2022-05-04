@@ -212,3 +212,58 @@ the same as null and booleans but the byte changed once again to `_` (0x5F)
 ```
 
 ## Object Types
+
+Object types are a lot more complex than meets the eye. It looks fairly simple
+until you realise that javascript is a quirky language that allows things like
+associative arrays and arrays where there are empty elements or referencing a
+object in itself creating recursive references. This makes (de)serializing
+objects a lot more complex than a simple primitive. Luckily not all objects work
+with the format tho. Only the following work
+
+- Object References
+- Array
+- Object literals
+- User created classes
+- ArrayBuffer
+- Uint*Array
+- Int*Array
+- Map
+- Set
+- Date
+- Regex
+- Error
+- SharedArrayBuffer (not usable outside v8)
+- WebAssembly.Module (not usable outside v8)
+- WebAssembly.Memory (not usable outside v8)
+
+### Object References
+
+Object's are used for complex data structures. But it would be a waste of space
+and time to serialize the exact same object multiple time. This is what a object
+reference is used for. The best way to explain how a reference works is with a
+example. So let's say we got a object with 2 keys and their value is the same
+object literal like here below
+
+```ts
+const innerObject = {};
+
+const object = {
+  key1: innerObject,
+  key2: innerObject,
+};
+```
+
+Then what happens is that `object` get's serialized as key value pairs. `key1`
+will be serialized as a string and the value here as a empty object. Then `key2`
+will also be serialized as a string but it's value will be serialized as a
+reference to a object serialized earlier. Do note that this is only for this
+specific example because both values reference the same object. If the object
+looks like the example below it will not use a reference because they're not the
+same object and are independently
+
+```ts
+const object = {
+  key1: {},
+  key2: {},
+};
+```
