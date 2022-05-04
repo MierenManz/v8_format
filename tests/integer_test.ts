@@ -2,14 +2,11 @@ import {
   assertEquals,
   assertThrows,
 } from "https://deno.land/std@0.136.0/testing/asserts.ts";
-
 import {
   deserializeV8Integer,
   serializeJsInteger,
 } from "../references/integer.ts";
-
-// deno-lint-ignore no-explicit-any
-const DENO_CORE = (Deno as any).core;
+import { DENO_CORE } from "./core.ts";
 
 const MIN_INT_VALUE = -1_073_741_824;
 const MAX_INT_VALUE = 1_073_741_823;

@@ -2,11 +2,8 @@ import {
   assertEquals,
   assertThrows,
 } from "https://deno.land/std@0.136.0/testing/asserts.ts";
-
 import { serializeJsArray } from "../references/array.ts";
-
-// deno-lint-ignore no-explicit-any
-const DENO_CORE = (Deno as any).core;
+import { DENO_CORE } from "./core.ts";
 
 Deno.test({
   name: "Serialize Dense Array",

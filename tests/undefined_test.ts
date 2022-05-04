@@ -2,14 +2,11 @@ import {
   assertEquals,
   assertThrows,
 } from "https://deno.land/std@0.136.0/testing/asserts.ts";
-
 import {
   deserializeV8Undefined,
   serializeJsUndefined,
 } from "../references/undefined.ts";
-
-// deno-lint-ignore no-explicit-any
-const DENO_CORE = (Deno as any).core;
+import { DENO_CORE } from "./core.ts";
 
 Deno.test({
   name: "Deserialize Undefined",
