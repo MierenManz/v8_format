@@ -258,12 +258,6 @@ will be serialized as a string and the value here as a empty object. Then `key2`
 will also be serialized as a string but it's value will be serialized as a
 reference to a object serialized earlier. Do note that this is only for this
 specific example because both values reference the same object. If the object
-looks like the example below it will not use a reference because they're not the
-same object and are independently
-
-```ts
-const object = {
-  key1: {},
-  key2: {},
-};
-```
+has 2 identical objects like 2x `{}` then it will not use a reference because
+they're not the same object but rather 2 individuals that have the same inner
+values and structure.
