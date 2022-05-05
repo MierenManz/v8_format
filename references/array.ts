@@ -121,9 +121,9 @@ export function serializeJsArray<T>(
   // Create new slice
   const serializedArray = new Uint8Array(length);
 
-  // Clone all Uint8Array's in `serializedValues` into `serializedArray`
+  // Copy all Uint8Array's in `serializedValues` into `serializedArray`
   serializedValues.reduce((ptr, current) => {
-    // Clone current dataslice to ptr
+    // Copy current dataslice to ptr
     serializedArray.set(current, ptr);
     return ptr += current.length;
   }, 0);
