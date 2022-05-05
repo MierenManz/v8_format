@@ -220,13 +220,13 @@ object in itself creating recursive references. This makes (de)serializing
 objects a lot more complex than a simple primitive. Luckily not all objects work
 with the format tho. Only the following work
 
-- Object References
+- [Object References](#object-references)
 - Array
 - Object literals
 - User created classes
 - ArrayBuffer
-- Uint*Array
-- Int*Array
+- Uint*Array (where * is 8, 16, 32 or 64)
+- Int*Array (where * is 8, 16, 32 or 64)
 - Map
 - Set
 - Date
