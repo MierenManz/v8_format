@@ -2,7 +2,7 @@ import {
   decode32 as varintDecode,
   encode as varintEncode,
 } from "https://deno.land/x/varint@v2.0.0/varint.ts";
-
+import { consume } from "./util.ts";
 const MIN_INT_VALUE = -1_073_741_824;
 const MAX_INT_VALUE = 1_073_741_823;
 
@@ -39,9 +39,11 @@ export function serializeJsInteger(value: number): Uint8Array {
  */
 export function deserializeV8Integer(data: Uint8Array): number {
   if (data[0] !== 0x49) throw new Error("Not a v8 integer");
-  //   Varint Decode
-  const rawValue = varintDecode(data.subarray(1))[0];
+  // Varint Decode
+  const [rawValue, bytesUsed] = varintDecode(data, 1);
+  // Consume bytes (this is so that we don't need to pass a offset to the next deserialize function)
+  consume(data, bytesUsed);
 
-  //   ZigZag Decode
+  // ZigZag Decode
   return (rawValue >> 1) ^ -(rawValue & 1);
 }

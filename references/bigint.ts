@@ -2,6 +2,7 @@ import {
   decode32 as varintDecode,
   encode as varintEncode,
 } from "https://deno.land/x/varint@v2.0.0/varint.ts";
+import { consume } from "./util.ts";
 
 /**
  * @param { BigInt } value - BigInt To Serialize
@@ -58,8 +59,9 @@ export function deserializeV8BigInt(data: Uint8Array): bigint {
   const [bitfield, bytesUsed] = varintDecode(data, 1);
   // Check if bigint should be negative
   const isNegative = bitfield % 16 === 1;
+  const bigintCount = bitfield / 16 | 0;
   // Create a new dataview and ArrayBuffer
-  const bigintDataSlice = new Uint8Array(data.subarray(bytesUsed));
+  const bigintDataSlice = data.slice(bytesUsed, bytesUsed + bigintCount * 8);
   // Create bigint dataview
   const u64Array = new BigUint64Array(bigintDataSlice.buffer);
   // Reverse so that we get the right order
@@ -72,6 +74,6 @@ export function deserializeV8BigInt(data: Uint8Array): bigint {
     // Add the bit values of the new u64 to the current value
     num |= bg;
   }
-
+  consume(data, bigintCount * 8 + bytesUsed);
   return isNegative ? -num : num;
 }

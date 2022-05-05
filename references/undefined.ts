@@ -1,3 +1,4 @@
+import { consume } from "./util.ts";
 /**
  * @param { undefined } val - undefined To Serialize
  * @returns { Uint8Array } Serialized undefined
@@ -18,6 +19,10 @@ export function serializeJsUndefined(val?: undefined): Uint8Array {
 export function deserializeV8Undefined(
   data: Uint8Array,
 ): undefined {
-  if (data[0] === 0x5F) return undefined;
+  if (data[0] === 0x5F) {
+    // Consume bytes (this is so that we don't need to pass a offset to the next deserialize function)
+    consume(data, 1);
+    return undefined;
+  }
   throw new Error("Not a V8 undefined");
 }

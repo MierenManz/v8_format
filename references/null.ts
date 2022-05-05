@@ -1,3 +1,4 @@
+import { consume } from "./util.ts";
 /**
  * @param { null } val - null To Serialize
  * @returns { Uint8Array } Serialized null
@@ -18,6 +19,10 @@ export function serializeJsNull(val: null): Uint8Array {
 export function deserializeV8Null(
   data: Uint8Array,
 ): null {
-  if (data[0] === 0x30) return null;
+  if (data[0] === 0x30) {
+    // Consume bytes (this is so that we don't need to pass a offset to the next deserialize function)
+    consume(data, 1);
+    return null;
+  }
   throw new Error("Not a V8 null");
 }

@@ -2,6 +2,7 @@ import {
   decode32 as varintDecode,
   encode as varintEncode,
 } from "https://deno.land/x/varint@v2.0.0/varint.ts";
+import { consume } from "./util.ts";
 
 /**
  * @param { string } data - String To Serialize
@@ -28,7 +29,11 @@ export function deserializeV8String(data: Uint8Array): string {
   if (data[0] !== 0x22) throw new Error("Not a v8 string");
 
   const [stringLength, bytesUsed] = varintDecode(data, 1);
+  // Copy string data
   const stringData = data.subarray(bytesUsed, bytesUsed + stringLength);
-
-  return new TextDecoder().decode(stringData);
+  // Decode string
+  const decoded = new TextDecoder().decode(stringData);
+  // Consume bytes (this is so that we don't need to pass a offset to the next deserialize function)
+  consume(data, bytesUsed + stringLength);
+  return decoded;
 }

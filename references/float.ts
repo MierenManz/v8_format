@@ -1,3 +1,4 @@
+import { consume } from "./util.ts";
 /**
  * @param { number } float - Float64 To Serialize
  * @returns { Uint8Array } Serialized Float64 without magic bytes
@@ -24,5 +25,7 @@ export function serializeJsFloat(float: number): Uint8Array {
 export function deserializeV8Float(data: Uint8Array): number {
   if (data[0] !== 0x4E) throw new Error("Not a v8 float");
   const dt = new DataView(data);
+  // Consume bytes (this is so that we don't need to pass a offset to the next deserialize function)
+  consume(data, 9);
   return dt.getFloat64(1, true);
 }

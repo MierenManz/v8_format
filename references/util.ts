@@ -31,3 +31,12 @@ export function arrayMetadata<T>(array: T[]): ArrayMetadata {
   }
   return metadata;
 }
+
+/**
+ * copy bytes to the front of the array and nullifying data behind it.
+ * effectively consuming it
+ */
+export function consume(data: Uint8Array, length: number) {
+  data.copyWithin(0, length);
+  data.fill(0, data.length - length);
+}
