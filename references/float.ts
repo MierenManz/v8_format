@@ -1,10 +1,20 @@
 import { consume } from "./util.ts";
+
+const MIN_INT_VALUE = -1_073_741_824;
+const MAX_INT_VALUE = 1_073_741_823;
+
 /**
  * @param { number } float - Float64 To Serialize
  * @returns { Uint8Array } Serialized Float64 without magic bytes
  */
 export function serializeJsFloat(float: number): Uint8Array {
-  if (Number.isInteger(float)) throw new Error("Not a float");
+  if (
+    Number.isInteger(float) &&
+    float > MIN_INT_VALUE &&
+    float < MAX_INT_VALUE
+  ) {
+    throw new Error("Not a float");
+  }
 
   const ab = new ArrayBuffer(9);
   const binaryView = new Uint8Array(ab);

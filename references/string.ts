@@ -9,6 +9,7 @@ import { consume } from "./util.ts";
  * @returns { Uint8Array } Serialized string without magic bytes
  */
 export function serializeJsString(data: string): Uint8Array {
+  // TODO: Add two byte string serialization
   const [varintBytes, length] = varintEncode(data.length);
   const stringEncoded = new TextEncoder().encode(data);
 
