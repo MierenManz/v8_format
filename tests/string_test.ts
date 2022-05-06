@@ -2,11 +2,8 @@ import {
   deserializeV8String,
   serializeJsString,
 } from "../references/string.ts";
-import {
-  assertEquals,
-  assertThrows,
-} from "https://deno.land/std@0.138.0/testing/asserts.ts";
-import { DENO_CORE } from "./core.ts";
+import { assertEquals, assertThrows } from "./_deps.ts";
+import { DENO_CORE } from "./_core.ts";
 
 Deno.test({
   name: "Deserialize String",

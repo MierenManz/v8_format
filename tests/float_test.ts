@@ -1,9 +1,6 @@
 import { deserializeV8Float, serializeJsFloat } from "../references/float.ts";
-import { DENO_CORE } from "./core.ts";
-import {
-  assertEquals,
-  assertThrows,
-} from "https://deno.land/std@0.138.0/testing/asserts.ts";
+import { DENO_CORE } from "./_core.ts";
+import { assertEquals, assertThrows } from "./_deps.ts";
 
 Deno.test({
   name: "Deserialize Float",

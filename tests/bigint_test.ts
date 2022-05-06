@@ -1,12 +1,9 @@
-import {
-  assertEquals,
-  assertThrows,
-} from "https://deno.land/std@0.136.0/testing/asserts.ts";
+import { assertEquals, assertThrows } from "./_deps.ts";
 import {
   deserializeV8BigInt,
   serializeJsBigInt,
 } from "../references/bigint.ts";
-import { DENO_CORE } from "./core.ts";
+import { DENO_CORE } from "./_core.ts";
 
 Deno.test({
   name: "Deserialize BigInt",
