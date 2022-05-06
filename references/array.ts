@@ -155,7 +155,7 @@ export function deserializeV8Array<T>(
   const arr: T[] = [];
   objRefs.push(arr);
 
-  let useKvPairs = data[0] === 0x61;
+  let useKvPairs = data[0] === 0x61 || arr.length === arrayLength;
 
   consume(data, bytesUsed);
   while (data[0] !== endingByte) {
