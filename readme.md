@@ -47,7 +47,8 @@ and then the raw data
 
 #### Utf8 String Format
 
-I have not looked into this yet.
+Seems to only be used internally. (maybe found with JIT compiled functions.
+Needs triage)
 
 #### One Byte String Format
 
@@ -130,14 +131,16 @@ not get zig-zag encoded unlike the signed integers.\
 Do note that this format is not compatible with the Signed integer format
 because positive integers in that format also get zigzag encoded.
 
-(this still needs a example once I know where v8 uses this format)
+(this still needs a example once I know where v8 uses this format (selfnote:
+Might be found when using JIT compiled functions. Needs triage))
 
 ### BigInt Format
 
 The bigint format does not have multiple variants and only has one. It has a
 indicator byte which is `Z` (0x5A) and after that a varint bitfield specifying
-how many bytes it uses and if the value is positive or negative. It is alot more
-complex than either a float or integer because it has a unknown size
+how many u64 integers are used for the bigint and if the value is positive or
+negative. It is alot more complex than either a float or integer because it has
+a unknown size
 
 Negative BigInt -12
 
