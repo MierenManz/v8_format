@@ -14,26 +14,28 @@ Deno.test({
     await t.step({
       name: "Deserialize true",
       fn: function () {
-        const serializedBoolean = DENO_CORE
+        const input = DENO_CORE
           .serialize(true)
           .subarray(2);
 
-        const s = deserializeV8Boolean(serializedBoolean);
+        const s = deserializeV8Boolean(input);
 
         assertEquals(s, true);
+        assertEquals(input, new Uint8Array(input.length).fill(0));
       },
     });
 
     await t.step({
       name: "Deserialize false",
       fn: function () {
-        const serializedBoolean = DENO_CORE
+        const input = DENO_CORE
           .serialize(false)
           .subarray(2);
 
-        const s = deserializeV8Boolean(serializedBoolean);
+        const s = deserializeV8Boolean(input);
 
         assertEquals(s, false);
+        assertEquals(input, new Uint8Array(input.length).fill(0));
       },
     });
 

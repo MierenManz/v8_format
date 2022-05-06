@@ -17,48 +17,52 @@ Deno.test({
     await t.step({
       name: "Deserialize Positive Integer",
       fn: function () {
-        const serializedInteger = DENO_CORE
+        const input = DENO_CORE
           .serialize(12)
           .subarray(2);
 
-        const res = deserializeV8Integer(serializedInteger);
+        const res = deserializeV8Integer(input);
         assertEquals(res, 12);
+        assertEquals(input, new Uint8Array(input.length).fill(0));
       },
     });
 
     await t.step({
       name: "Deserialize Negative Integer",
       fn: function () {
-        const serializedInteger = DENO_CORE
+        const input = DENO_CORE
           .serialize(-12)
           .subarray(2);
 
-        const res = deserializeV8Integer(serializedInteger);
+        const res = deserializeV8Integer(input);
         assertEquals(res, -12);
+        assertEquals(input, new Uint8Array(input.length).fill(0));
       },
     });
 
     await t.step({
       name: "Deserialize Max Integer",
       fn: function () {
-        const serializedInteger = DENO_CORE
+        const input = DENO_CORE
           .serialize(MAX_INT_VALUE)
           .subarray(2);
 
-        const res = deserializeV8Integer(serializedInteger);
+        const res = deserializeV8Integer(input);
         assertEquals(res, MAX_INT_VALUE);
+        assertEquals(input, new Uint8Array(input.length).fill(0));
       },
     });
 
     await t.step({
       name: "Deserialize Min Integer",
       fn: function () {
-        const serializedInteger = DENO_CORE
+        const input = DENO_CORE
           .serialize(MIN_INT_VALUE)
           .subarray(2);
 
-        const res = deserializeV8Integer(serializedInteger);
+        const res = deserializeV8Integer(input);
         assertEquals(res, MIN_INT_VALUE);
+        assertEquals(input, new Uint8Array(input.length).fill(0));
       },
     });
 

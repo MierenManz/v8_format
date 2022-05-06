@@ -14,48 +14,52 @@ Deno.test({
     await t.step({
       name: "Deserialize Positive BigInt",
       fn: function () {
-        const serializedBigint = DENO_CORE
+        const input = DENO_CORE
           .serialize(12n)
           .subarray(2);
 
-        const res = deserializeV8BigInt(serializedBigint);
+        const res = deserializeV8BigInt(input);
         assertEquals(res, 12n);
+        assertEquals(input, new Uint8Array(input.length).fill(0));
       },
     });
 
     await t.step({
       name: "Deserialize Negative BigInt",
       fn: function () {
-        const serializedBigint = DENO_CORE
+        const input = DENO_CORE
           .serialize(-12n)
           .subarray(2);
 
-        const res = deserializeV8BigInt(serializedBigint);
+        const res = deserializeV8BigInt(input);
         assertEquals(res, -12n);
+        assertEquals(input, new Uint8Array(input.length).fill(0));
       },
     });
 
     await t.step({
       name: "Deserialize Number.MAX_VALUE as BigInt",
       fn: function () {
-        const serializedBigint = DENO_CORE
+        const input = DENO_CORE
           .serialize(BigInt(Number.MAX_VALUE))
           .subarray(2);
 
-        const res = deserializeV8BigInt(serializedBigint);
+        const res = deserializeV8BigInt(input);
         assertEquals(res, BigInt(Number.MAX_VALUE));
+        assertEquals(input, new Uint8Array(input.length).fill(0));
       },
     });
 
     await t.step({
       name: "Deserialize Number.MIN_VALUE as BigInt",
       fn: function () {
-        const serializedBigint = DENO_CORE
+        const input = DENO_CORE
           .serialize(BigInt(Number.MIN_VALUE | 0))
           .subarray(2);
 
-        const res = deserializeV8BigInt(serializedBigint);
+        const res = deserializeV8BigInt(input);
         assertEquals(res, BigInt(Number.MIN_VALUE | 0));
+        assertEquals(input, new Uint8Array(input.length).fill(0));
       },
     });
 

@@ -11,12 +11,13 @@ Deno.test({
     await t.step({
       name: "Deserialize Null",
       fn: function () {
-        const serializedNull = DENO_CORE
+        const input = DENO_CORE
           .serialize(null)
           .subarray(2);
 
-        const res = deserializeV8Null(serializedNull);
+        const res = deserializeV8Null(input);
         assertEquals(res, null);
+        assertEquals(input, new Uint8Array(input.length).fill(0));
       },
     });
 

@@ -14,26 +14,26 @@ Deno.test({
     await t.step({
       name: "Deserialize One-Byte String",
       fn: function () {
-        const serializedString = DENO_CORE
+        const input = DENO_CORE
           .serialize("Hello World!")
           .subarray(2);
 
-        const res = deserializeV8String(serializedString);
-
+        const res = deserializeV8String(input);
         assertEquals(res, "Hello World!");
+        assertEquals(input, new Uint8Array(input.length).fill(0));
       },
     });
 
     await t.step({
       name: "Deserialize Two-Byte String",
       fn: function () {
-        const serializedString = DENO_CORE
+        const input = DENO_CORE
           .serialize("Hello World! 😃")
           .subarray(2);
 
-        const res = deserializeV8String(serializedString);
-
+        const res = deserializeV8String(input);
         assertEquals(res, "Hello World! 😃");
+        assertEquals(input, new Uint8Array(input.length).fill(0));
       },
       ignore: true,
     });
