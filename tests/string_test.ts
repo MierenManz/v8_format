@@ -67,7 +67,6 @@ Deno.test({
 
         assertEquals(res, ref);
       },
-      ignore: true,
     });
 
     await t.step({
