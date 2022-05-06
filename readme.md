@@ -81,7 +81,7 @@ serializing `Hi!😃`
 ```
 0xFF  0x0F    Magic bytes
 0x63  0x0A    String indicator byte and varint encoded length
-0x48  0x00    H
+0x48  0x00    H (UTF-8 characters don't need a second byte. Therefore null byte)
 0x69  0x00    i
 0x21  0x00    !
 0x3D  0xD8    =Ø (these 4 bytes are the emoji)
