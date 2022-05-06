@@ -119,6 +119,7 @@ Deno.test({
         assertThrows(() => serializeJsArray({} as any));
       },
     });
+
     await t.step({
       name: "Serialize regular array",
       fn: function () {

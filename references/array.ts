@@ -118,7 +118,7 @@ export function serializeJsArray<T>(
   );
 
   // Calculate the length for a new Uint8Array slice
-  const length = serializedValues.reduce((x, y) => x += y.length, 0);
+  const length = serializedValues.reduce((x, y) => x + y.length, 0);
   // Create new slice
   const serializedArray = new Uint8Array(length);
 
@@ -126,7 +126,7 @@ export function serializeJsArray<T>(
   serializedValues.reduce((ptr, current) => {
     // Copy current dataslice to ptr
     serializedArray.set(current, ptr);
-    return ptr += current.length;
+    return ptr + current.length;
   }, 0);
 
   // Return
