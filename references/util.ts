@@ -1,5 +1,3 @@
-import { encode } from "https://deno.land/x/varint@v2.0.0/varint.ts";
-
 export interface ArrayMetadata {
   isSparse: boolean;
   indexedLength: number;
