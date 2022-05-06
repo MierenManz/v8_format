@@ -19,8 +19,8 @@ export function serializeJsBoolean(bool: boolean): Uint8Array {
  */
 export function deserializeV8Boolean(data: Uint8Array): boolean {
   if (data[0] === 0x54 || data[0] === 0x46) {
-    // Consume bytes (this is so that we don't need to pass a offset to the next deserialize function)
     const bool = data[0] === 0x54;
+    // Consume bytes (this is so that we don't need to pass a offset to the next deserialize function)
     consume(data, 1);
     return bool;
   }
