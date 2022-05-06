@@ -9,6 +9,7 @@ import { consume } from "./util.ts";
  * @returns { Uint8Array } Serialized string without magic bytes
  */
 export function serializeJsString(data: string): Uint8Array {
+  if (typeof data !== "string") throw new Error("Not a string");
   const isTwoByteString = data.length !== new Blob([data]).size;
   const indicatorByte = isTwoByteString ? 0x63 : 0x22;
 

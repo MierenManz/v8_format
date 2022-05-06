@@ -8,7 +8,7 @@ export function serializeJsNull(val: null): Uint8Array {
     return new Uint8Array([0x30]);
   }
 
-  throw new Error("Not Null or Undefined");
+  throw new Error("Not Null");
 }
 
 /**
