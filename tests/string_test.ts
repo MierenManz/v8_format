@@ -35,7 +35,6 @@ Deno.test({
         assertEquals(res, "Hello World! 😃");
         assertEquals(input, new Uint8Array(input.length).fill(0));
       },
-      ignore: true,
     });
   },
 });
