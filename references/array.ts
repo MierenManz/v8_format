@@ -218,6 +218,9 @@ export function deserializeV8Array<T>(
 
     useKvPairs = useKvPairs || arr.length === arrayLength;
   }
-
+  // Decode trailing varint's to know their byte length. Then return just that length.
+  const tailBytesLength = varintDecode(data, varintDecode(data)[1])[1];
+  // Consume tail bytes length + 1 (ending array byte)
+  consume(data, tailBytesLength + 1);
   return arr;
 }
