@@ -36,6 +36,17 @@ Deno.test({
         assertEquals(input, new Uint8Array(input.length).fill(0));
       },
     });
+
+    await t.step({
+      name: "Deserialize non string",
+      fn: function () {
+        const input = DENO_CORE
+          .serialize(null)
+          .subarray(2);
+
+        assertThrows(() => deserializeV8String(input));
+      },
+    });
   },
 });
 
