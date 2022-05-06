@@ -76,7 +76,17 @@ data of the string and then the raw data.
 This format is used for when we have characters that need to be represented as
 multiple bytes. Like emoji's or non-latin languages like arabic
 
-(this still needs a example)
+serializing `Hi!😃`
+
+```
+0xFF  0x0F    Magic bytes
+0x63  0x0A    String indicator byte and varint encoded length
+0x48  0x00    H
+0x69  0x00    i
+0x21  0x00    !
+0x3D  0xD8    =Ø (these 4 bytes are the emoji)
+0x03  0xDE    0x03 Þ
+```
 
 ### Integer Format
 
