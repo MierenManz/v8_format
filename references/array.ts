@@ -1,4 +1,4 @@
-import { arrayMetadata, serializeReference } from "./util.ts";
+import { arrayMetadata } from "./util.ts";
 import { encode as varintEncode } from "https://deno.land/x/varint@v2.0.0/varint.ts";
 import { serializeJsString } from "./string.ts";
 import { serializeJsInteger } from "./integer.ts";
@@ -7,6 +7,7 @@ import { serializeJsFloat } from "./float.ts";
 import { serializeJsUndefined } from "./undefined.ts";
 import { serializeJsBigInt } from "./bigint.ts";
 import { serializeJsBoolean } from "./boolean.ts";
+import { serializeReference } from "./object_reference.ts";
 
 export function serializeJsArray<T>(
   array: T[],
