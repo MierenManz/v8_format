@@ -84,7 +84,6 @@ Deno.test({
       fn: function () {
         assertThrows(() => serializeJsString(null as unknown as string));
       },
-      ignore: true,
     });
   },
 });
