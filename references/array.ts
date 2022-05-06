@@ -1,13 +1,20 @@
 import { arrayMetadata } from "./util.ts";
-import { encode as varintEncode } from "https://deno.land/x/varint@v2.0.0/varint.ts";
-import { serializeJsString } from "./string.ts";
-import { serializeJsInteger } from "./integer.ts";
-import { serializeJsNull } from "./null.ts";
-import { serializeJsFloat } from "./float.ts";
-import { serializeJsUndefined } from "./undefined.ts";
-import { serializeJsBigInt } from "./bigint.ts";
-import { serializeJsBoolean } from "./boolean.ts";
-import { serializeReference } from "./object_reference.ts";
+import {
+  decode32 as varintDecode,
+  encode as varintEncode,
+} from "https://deno.land/x/varint@v2.0.0/varint.ts";
+import { deserializeV8String, serializeJsString } from "./string.ts";
+import { deserializeV8Integer, serializeJsInteger } from "./integer.ts";
+import { deserializeV8Null, serializeJsNull } from "./null.ts";
+import { deserializeV8Float, serializeJsFloat } from "./float.ts";
+import { deserializeV8Undefined, serializeJsUndefined } from "./undefined.ts";
+import { deserializeV8BigInt, serializeJsBigInt } from "./bigint.ts";
+import { deserializeV8Boolean, serializeJsBoolean } from "./boolean.ts";
+import {
+  deserializeReference,
+  serializeReference,
+} from "./object_reference.ts";
+import { consume } from "./util.ts";
 
 export function serializeJsArray<T>(
   array: T[],
@@ -131,4 +138,86 @@ export function serializeJsArray<T>(
 
   // Return
   return serializedArray;
+}
+
+export function deserializeV8Array<T>(
+  data: Uint8Array,
+  // deno-lint-ignore ban-types
+  objRefs: {}[] = [],
+): T[] {
+  if (data[0] as number !== 0x61 && data[0] !== 0x41) {
+    throw new Error("Not a V8 array");
+  }
+  const startingByte = data[0];
+  const endingByte = startingByte === 0x61 ? 0x40 : 0x24;
+
+  const [arrayLength, bytesUsed] = varintDecode(data, 1);
+  const arr: T[] = [];
+  objRefs.push(arr);
+
+  let useKvPairs = data[0] === 0x61;
+
+  consume(data, bytesUsed);
+  while (data[0] !== endingByte) {
+    let key: string | number | undefined = undefined;
+    if (useKvPairs) {
+      key = data[0] === 0x63 || data[0] === 0x22
+        ? deserializeV8String(data)
+        : deserializeV8Integer(data);
+    }
+
+    let value: T;
+    switch (data[0]) {
+      // String
+      case 0x63:
+      case 0x22:
+        value = deserializeV8String(data) as unknown as T;
+        break;
+      // Integer
+      case 0x49:
+        value = deserializeV8Integer(data) as unknown as T;
+        break;
+      // Bigint
+      case 0x5A:
+        value = deserializeV8BigInt(data) as unknown as T;
+        break;
+      // Float
+      case 0x4E:
+        value = deserializeV8Float(data) as unknown as T;
+        break;
+      // Boolean
+      case 0x46:
+      case 0x54:
+        value = deserializeV8Boolean(data) as unknown as T;
+        break;
+      // Null
+      case 0x30:
+        value = deserializeV8Null(data) as unknown as T;
+        break;
+      // Undefined
+      case 0x5F:
+        value = deserializeV8Undefined(data) as unknown as T;
+        break;
+      // Array
+      case 0x61:
+      case 0x41:
+        value = deserializeV8Array(data, objRefs) as unknown as T;
+        break;
+      case 0x5E:
+        value = deserializeReference(data, objRefs) as unknown as T;
+        break;
+      default:
+        throw new Error("Could not deserialize value");
+    }
+
+    if (key !== undefined) {
+      arr[key as number] = value!;
+    } else {
+      arr.push(value!);
+    }
+
+    useKvPairs = useKvPairs || arr.length === arrayLength;
+  }
+
+  return arr;
 }
