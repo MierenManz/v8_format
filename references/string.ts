@@ -38,13 +38,13 @@ export function serializeJsString(data: string): Uint8Array {
  * @returns { string } Deserialized string
  */
 export function deserializeV8String(data: Uint8Array): string {
-  if (data[0] !== 0x22) throw new Error("Not a v8 string");
-
+  if (data[0] !== 0x22 && data[0] !== 0x63) throw new Error("Not a v8 string");
+  const decodingLabel = data[0] === 0x63 ? "utf-16" : "utf-8";
   const [stringLength, bytesUsed] = varintDecode(data, 1);
   // Copy string data
   const stringData = data.subarray(bytesUsed, bytesUsed + stringLength);
   // Decode string
-  const decoded = new TextDecoder().decode(stringData);
+  const decoded = new TextDecoder(decodingLabel).decode(stringData);
   // Consume bytes (this is so that we don't need to pass a offset to the next deserialize function)
   consume(data, bytesUsed + stringLength);
   return decoded;
