@@ -33,11 +33,10 @@ export function arrayMetadata<T>(array: T[]): ArrayMetadata {
  */
 export function strIsIntIndex(val: string): boolean {
   const valAsInt = parseInt(val);
-  const v = !Number.isNaN(valAsInt) &&
+  return !Number.isNaN(valAsInt) &&
     valAsInt >= MIN_INT_VALUE &&
     valAsInt <= MAX_INT_VALUE &&
     valAsInt === parseFloat(val);
-  return v;
 }
 
 /**
