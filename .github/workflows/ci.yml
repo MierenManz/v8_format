@@ -23,4 +23,4 @@ jobs:
         run: deno lint
 
       - name: Test
-        run: deno test -j=5
+        run: deno test
