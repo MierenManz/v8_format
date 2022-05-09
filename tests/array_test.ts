@@ -294,6 +294,7 @@ Deno.test({
         ] as any;
         data.push(data);
 
+        data[1.1] = null;
         data["key"] = "value";
         data["int"] = 12;
         data["float"] = 12.58;
@@ -396,6 +397,7 @@ Deno.test({
         ] as any;
         data.push(data);
 
+        data[1.1] = null;
         data["key"] = "value";
         data["int"] = 12;
         data["float"] = 12.58;
