@@ -50,8 +50,11 @@ export function serializeJsArray<T>(
   }
 
   // varint encode amount of kvPairs
-  const kvPairsVarint =
-    varintEncode(metadata.indexedLength + metadata.unindexedLength)[0];
+  const kvPairsVarint = varintEncode(
+    metadata.isSparse
+      ? metadata.indexedLength + metadata.unindexedLength
+      : metadata.unindexedLength,
+  )[0];
 
   // varint encode length of array
   const indexedValuesVarint = varintEncode(array.length)[0];
