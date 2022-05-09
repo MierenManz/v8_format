@@ -1,17 +1,9 @@
 import { varintDecode, varintEncode } from "./_deps.ts";
 import { arrayMetadata, consume, strIsIntIndex } from "./_util.ts";
-import { deserializeV8BigInt } from "./bigint.ts";
-import { deserializeV8Boolean } from "./boolean.ts";
-import { deserializeV8Float } from "./float.ts";
 import { deserializeV8Integer, serializeJsInteger } from "./integer.ts";
-import { serializeAny } from "./mod.ts";
-import { deserializeV8Null } from "./null.ts";
-import {
-  deserializeReference,
-  serializeReference,
-} from "./object_reference.ts";
+import { deserializeAny, serializeAny } from "./mod.ts";
+import { serializeReference } from "./object_reference.ts";
 import { deserializeV8String, serializeJsString } from "./string.ts";
-import { deserializeV8Undefined } from "./undefined.ts";
 
 export function serializeJsArray<T>(
   array: T[],
@@ -113,50 +105,7 @@ export function deserializeV8Array<T>(
         : deserializeV8Integer(data);
     }
 
-    let value: T;
-    switch (data[0]) {
-      // String
-      case 0x63:
-      case 0x22:
-        value = deserializeV8String(data) as unknown as T;
-        break;
-      // Integer
-      case 0x49:
-        value = deserializeV8Integer(data) as unknown as T;
-        break;
-      // Bigint
-      case 0x5A:
-        value = deserializeV8BigInt(data) as unknown as T;
-        break;
-      // Float
-      case 0x4E:
-        value = deserializeV8Float(data) as unknown as T;
-        break;
-      // Boolean
-      case 0x46:
-      case 0x54:
-        value = deserializeV8Boolean(data) as unknown as T;
-        break;
-      // Null
-      case 0x30:
-        value = deserializeV8Null(data) as unknown as T;
-        break;
-      // Undefined
-      case 0x5F:
-        value = deserializeV8Undefined(data) as unknown as T;
-        break;
-      // Array
-      case 0x61:
-      case 0x41:
-        value = deserializeV8Array(data, objRefs) as unknown as T;
-        break;
-      case 0x5E:
-        value = deserializeReference(data, objRefs) as unknown as T;
-        break;
-      default:
-        throw new Error("Could not deserialize value");
-    }
-
+    const value = deserializeAny(data, objRefs);
     if (key !== undefined) {
       arr[key as number] = value!;
     } else {
