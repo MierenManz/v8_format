@@ -253,9 +253,9 @@ with the format tho. Only the following work
 
 Object's are used for complex data structures. But it would be a waste of space
 and time to serialize the exact same object multiple time. This is what a object
-reference is used for. The best way to explain how a reference works is with a
-example. So let's say we got a object with 2 keys and their value is the same
-object literal like here below
+reference is used for. It is indicated by `^` (0x5E)and the best way to explain
+how a reference works is with a example. So let's say we got a object with 2
+keys and their value is the same object literal like here below
 
 ```ts
 const innerObject = {};
