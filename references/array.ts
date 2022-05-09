@@ -50,11 +50,8 @@ export function serializeJsArray<T>(
   }
 
   // varint encode amount of kvPairs
-  const kvPairsVarint = varintEncode(
-    metadata.isSparse
-      ? metadata.indexedLength + metadata.unindexedLength
-      : metadata.unindexedLength,
-  )[0];
+  const kvPairsVarint =
+    varintEncode(metadata.indexedLength + metadata.unindexedLength)[0];
 
   // varint encode length of array
   const indexedValuesVarint = varintEncode(array.length)[0];
@@ -165,6 +162,8 @@ export function deserializeV8Array<T>(
 
     useKvPairs = useKvPairs || arr.length === arrayLength;
   }
+
+  // TODO: assert that deserialized length is the one provided
   // Decode trailing varint's to know their byte length. Then return just that length.
   const tailBytesLength = varintDecode(data, varintDecode(data)[1])[1];
   // Consume tail bytes length + 1 (ending array byte)
