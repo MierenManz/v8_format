@@ -1,20 +1,20 @@
-import { arrayMetadata } from "./util.ts";
 import {
   decode32 as varintDecode,
   encode as varintEncode,
 } from "https://deno.land/x/varint@v2.0.0/varint.ts";
 import { deserializeV8String, serializeJsString } from "./string.ts";
 import { deserializeV8Integer, serializeJsInteger } from "./integer.ts";
-import { deserializeV8Null, serializeJsNull } from "./null.ts";
-import { deserializeV8Float, serializeJsFloat } from "./float.ts";
-import { deserializeV8Undefined, serializeJsUndefined } from "./undefined.ts";
-import { deserializeV8BigInt, serializeJsBigInt } from "./bigint.ts";
-import { deserializeV8Boolean, serializeJsBoolean } from "./boolean.ts";
+import { deserializeV8Null } from "./null.ts";
+import { deserializeV8Float } from "./float.ts";
+import { deserializeV8Undefined } from "./undefined.ts";
+import { deserializeV8BigInt } from "./bigint.ts";
+import { deserializeV8Boolean } from "./boolean.ts";
 import {
   deserializeReference,
   serializeReference,
 } from "./object_reference.ts";
-import { consume, strIsIntIndex } from "./util.ts";
+import { serializeAny } from "./mod.ts";
+import { arrayMetadata, consume, strIsIntIndex } from "./util.ts";
 
 export function serializeJsArray<T>(
   array: T[],
@@ -49,56 +49,7 @@ export function serializeJsArray<T>(
       continue;
     }
 
-    switch (typeof value) {
-      case "bigint":
-        serializedValues.push(serializeJsBigInt(value));
-        break;
-      case "boolean":
-        serializedValues.push(serializeJsBoolean(value));
-        break;
-      case "number": {
-        let serialized: Uint8Array;
-        try {
-          serialized = serializeJsInteger(value);
-        } catch {
-          serialized = serializeJsFloat(value);
-        } finally {
-          serializedValues.push(serialized!);
-        }
-        break;
-      }
-
-      case "string":
-        serializedValues.push(serializeJsString(value));
-        break;
-      case "undefined":
-        serializedValues.push(serializeJsUndefined(value));
-        break;
-      case "object": {
-        if (value === null) {
-          // Null
-          serializedValues.push(serializeJsNull(value as unknown as null));
-          continue;
-        }
-
-        if (Array.isArray(value)) {
-          // Array (either dense or sparse)
-          serializedValues.push(serializeJsArray(value));
-          objRefs.push(value);
-          continue;
-        }
-
-        if (value instanceof Object) {
-          // Plain object
-          objRefs.push(value);
-          continue;
-        }
-
-        throw new Error("Object cannot be serialized");
-      }
-      default:
-        throw new Error("Type cannot be serialized");
-    }
+    serializedValues.push(serializeAny(value));
   }
 
   // varint encode amount of kvPairs
