@@ -48,6 +48,7 @@ Deno.test({
       fn: function () {
         // deno-lint-ignore no-explicit-any
         const data = [] as any;
+        data[1.1] = null;
         data["key"] = "value";
         data["int"] = 12;
         data["float"] = 12.58;
@@ -57,7 +58,6 @@ Deno.test({
         data["undefined"] = undefined;
         data["bigint"] = 12n;
         data["ref"] = data;
-
         const input = DENO_CORE
           .serialize(data)
           .subarray(2);
@@ -151,6 +151,7 @@ Deno.test({
         // deno-fmt-ignore
         // deno-lint-ignore no-explicit-any
         const data = [,,] as any;
+        data[1.1] = null;
         data["key"] = "value";
         data["int"] = 12;
         data["float"] = 12.58;
@@ -257,6 +258,7 @@ Deno.test({
       fn: function () {
         // deno-lint-ignore no-explicit-any
         const data = [] as any;
+        data[1.1] = null;
         data["key"] = "value";
         data["int"] = 12;
         data["float"] = 12.58;
@@ -357,6 +359,7 @@ Deno.test({
         // deno-fmt-ignore
         // deno-lint-ignore no-explicit-any
         const data = [,,] as any;
+        data[1.1] = null;
         data["key"] = "value";
         data["int"] = 12;
         data["float"] = 12.58;
