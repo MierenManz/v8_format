@@ -30,6 +30,7 @@ Deno.test({
           null,
           undefined,
           12n,
+          [null],
         ];
         data.push(data);
 
@@ -58,6 +59,8 @@ Deno.test({
         data["undefined"] = undefined;
         data["bigint"] = 12n;
         data["ref"] = data;
+        data["arr"] = [null];
+
         const input = DENO_CORE
           .serialize(data)
           .subarray(2);
@@ -80,6 +83,7 @@ Deno.test({
           null,
           undefined,
           12n,
+          [null],
           // deno-lint-ignore no-explicit-any
         ] as any;
         data.push(data);
@@ -93,6 +97,7 @@ Deno.test({
         data["undefined"] = undefined;
         data["bigint"] = 12n;
         data["ref"] = data;
+        data["arr"] = [null];
 
         const input = DENO_CORE
           .serialize(data)
@@ -132,6 +137,7 @@ Deno.test({
           undefined,
           ,
           12n,
+          [null],
         ];
         data.push(data);
 
@@ -161,6 +167,7 @@ Deno.test({
         data["undefined"] = undefined;
         data["bigint"] = 12n;
         data["ref"] = data;
+        data["arr"] = null;
 
         const input = DENO_CORE
           .serialize(data)
@@ -185,6 +192,7 @@ Deno.test({
           undefined,
           ,
           12n,
+          [null],
           // deno-lint-ignore no-explicit-any
         ] as any;
         data.push(data);
@@ -198,6 +206,7 @@ Deno.test({
         data["undefined"] = undefined;
         data["bigint"] = 12n;
         data["ref"] = data;
+        data["arr"] = [null];
 
         const input = DENO_CORE
           .serialize(data)
@@ -240,6 +249,7 @@ Deno.test({
           null,
           undefined,
           12n,
+          [null],
         ];
         data.push(data);
 
@@ -268,6 +278,7 @@ Deno.test({
         data["undefined"] = undefined;
         data["bigint"] = 12n;
         data["ref"] = data;
+        data["arr"] = [null];
 
         const ref = DENO_CORE
           .serialize(data)
@@ -290,6 +301,7 @@ Deno.test({
           null,
           undefined,
           12n,
+          [null],
           // deno-lint-ignore no-explicit-any
         ] as any;
         data.push(data);
@@ -304,6 +316,7 @@ Deno.test({
         data["undefined"] = undefined;
         data["bigint"] = 12n;
         data["ref"] = data;
+        data["arr"] = [null];
 
         const ref = DENO_CORE
           .serialize(data)
@@ -341,6 +354,7 @@ Deno.test({
           undefined,
           ,
           12n,
+          [null],
         ];
         data.push(data);
 
@@ -370,6 +384,7 @@ Deno.test({
         data["undefined"] = undefined;
         data["bigint"] = 12n;
         data["ref"] = data;
+        data["arr"] = [null];
 
         const ref = DENO_CORE
           .serialize(data)
@@ -393,6 +408,7 @@ Deno.test({
           undefined,
           ,
           12n,
+          [null],
           // deno-lint-ignore no-explicit-any
         ] as any;
         data.push(data);
@@ -407,6 +423,7 @@ Deno.test({
         data["undefined"] = undefined;
         data["bigint"] = 12n;
         data["ref"] = data;
+        data["arr"] = [null];
 
         const ref = DENO_CORE
           .serialize(data)
