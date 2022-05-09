@@ -12,7 +12,7 @@ Deno.test({
   name: "Deserialize Integer",
   fn: async function (t) {
     await t.step({
-      name: "Deserialize Positive Integer",
+      name: "Deserialize Integer: Positive Integer",
       fn: function () {
         const input = DENO_CORE
           .serialize(12)
@@ -25,7 +25,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize Negative Integer",
+      name: "Deserialize Integer: Negative Integer",
       fn: function () {
         const input = DENO_CORE
           .serialize(-12)
@@ -38,7 +38,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize Max Integer",
+      name: "Deserialize Integer: Max Integer",
       fn: function () {
         const input = DENO_CORE
           .serialize(MAX_INT_VALUE)
@@ -51,7 +51,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize Min Integer",
+      name: "Deserialize Integer: Min Integer",
       fn: function () {
         const input = DENO_CORE
           .serialize(MIN_INT_VALUE)
@@ -64,7 +64,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize non Integer",
+      name: "Deserialize Integer: Non-Integer",
       fn: function () {
         const serializedBool = DENO_CORE
           .serialize(true)
@@ -80,7 +80,7 @@ Deno.test({
   name: "Serialize Integer",
   fn: async function (t) {
     await t.step({
-      name: "Serialize Positive Integer",
+      name: "Serialize Integer: Positive Integer",
       fn: function () {
         const ref = DENO_CORE
           .serialize(12)
@@ -92,7 +92,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize Negative Integer",
+      name: "Serialize Integer: Negative Integer",
       fn: function () {
         const ref = DENO_CORE
           .serialize(-12)
@@ -104,7 +104,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize Max Integer",
+      name: "Serialize Integer: Max Integer",
       fn: function () {
         const ref = DENO_CORE
           .serialize(MAX_INT_VALUE)
@@ -116,7 +116,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize Min Integer",
+      name: "Serialize Integer: Min Integer",
       fn: function () {
         const ref = DENO_CORE
           .serialize(MIN_INT_VALUE)
@@ -128,7 +128,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize non Integer",
+      name: "Serialize Integer: Non-Integer",
       fn: function () {
         assertThrows(() => serializeJsInteger(null as unknown as number));
       },

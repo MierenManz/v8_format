@@ -9,7 +9,7 @@ Deno.test({
   name: "Deserialize BigInt",
   fn: async function (t) {
     await t.step({
-      name: "Deserialize Positive BigInt",
+      name: "Deserialize BigInt: Positive BigInt",
       fn: function () {
         const input = DENO_CORE
           .serialize(12n)
@@ -22,7 +22,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize Negative BigInt",
+      name: "Deserialize BigInt: Negative BigInt",
       fn: function () {
         const input = DENO_CORE
           .serialize(-12n)
@@ -35,7 +35,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize Number.MAX_VALUE as BigInt",
+      name: "Deserialize BigInt: Number.MAX_VALUE as BigInt",
       fn: function () {
         const input = DENO_CORE
           .serialize(BigInt(Number.MAX_VALUE))
@@ -48,7 +48,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize Number.MIN_VALUE as BigInt",
+      name: "Deserialize BigInt: Number.MIN_VALUE as BigInt",
       fn: function () {
         const input = DENO_CORE
           .serialize(BigInt(Number.MIN_VALUE | 0))
@@ -61,7 +61,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize Invalid BigInt",
+      name: "Deserialize BigInt: Invalid BigInt",
       fn: function () {
         const serializedNumber = DENO_CORE
           .serialize(12)
@@ -77,7 +77,7 @@ Deno.test({
   name: "Serialize BigInt",
   fn: async function (t) {
     await t.step({
-      name: "Serialize Positive BigInt",
+      name: "Serialize BigInt: Positive BigInt",
       fn: function () {
         const ref = DENO_CORE
           .serialize(12n)
@@ -90,7 +90,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize Negative BigInt",
+      name: "Serialize BigInt: Negative BigInt",
       fn: function () {
         const ref = DENO_CORE
           .serialize(-12n)
@@ -103,7 +103,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize Number.MAX_VALUE as BigInt",
+      name: "Serialize BigInt: Number.MAX_VALUE as BigInt",
       fn: function () {
         const ref = DENO_CORE
           .serialize(BigInt(Number.MAX_VALUE))
@@ -116,7 +116,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize Number.MIN_VALUE as BigInt",
+      name: "Serialize BigInt: Number.MIN_VALUE as BigInt",
       fn: function () {
         const ref = DENO_CORE
           .serialize(BigInt(Number.MIN_VALUE | 0))
@@ -129,7 +129,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize Bad BigInt",
+      name: "Serialize BigInt: Bad BigInt",
       fn: function () {
         assertThrows(() => serializeJsBigInt(12 as unknown as bigint));
       },

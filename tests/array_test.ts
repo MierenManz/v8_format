@@ -6,7 +6,7 @@ Deno.test({
   name: "Deserialize Dense Array",
   fn: async function (t) {
     await t.step({
-      name: "Deserialize empty array",
+      name: "Deserialize Dense Array: Empty Array",
       fn: function () {
         const input = DENO_CORE
           .serialize([])
@@ -19,7 +19,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize regular array",
+      name: "Deserialize Dense Array: Regular Array",
       fn: function () {
         const data: unknown[] = [
           "value",
@@ -45,7 +45,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize associative array",
+      name: "Deserialize Dense Array: Associative Array",
       fn: function () {
         // deno-lint-ignore no-explicit-any
         const data = [] as any;
@@ -72,7 +72,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize mixed array",
+      name: "Deserialize Dense Array: Mixed Array",
       fn: function () {
         const data = [
           "value",
@@ -115,7 +115,7 @@ Deno.test({
   name: "Deserialize Sparse Array",
   fn: async function (t) {
     await t.step({
-      name: "Deserialize object as array",
+      name: "Deserialize Sparse Array: Object As Array",
       fn: function () {
         const input = DENO_CORE
           .serialize({})
@@ -125,7 +125,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize regular array",
+      name: "Deserialize Sparse Array: Regular Array",
       fn: function () {
         const data: unknown[] = [
           "value",
@@ -152,7 +152,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize associative array",
+      name: "Deserialize Sparse Array: Associative Array",
       fn: function () {
         // deno-fmt-ignore
         // deno-lint-ignore no-explicit-any
@@ -180,7 +180,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize mixed array",
+      name: "Deserialize Sparse Array: Mixed Array",
       fn: function () {
         const data = [
           "value",
@@ -224,7 +224,7 @@ Deno.test({
   name: "Serialize Dense Array",
   fn: async function (t) {
     await t.step({
-      name: "Serialize empty array",
+      name: "Serialize Dense Array: Empty Array",
       fn: function () {
         const data: string[] = [];
         const ref = DENO_CORE
@@ -238,7 +238,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize regular array",
+      name: "Serialize Dense Array: Regular Array",
       fn: function () {
         const data: unknown[] = [
           "value",
@@ -264,7 +264,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "serialize associative array",
+      name: "Serialize Dense Array: Associative Array",
       fn: function () {
         // deno-lint-ignore no-explicit-any
         const data = [] as any;
@@ -290,7 +290,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize mixed array",
+      name: "Serialize Dense Array: Mixed Array",
       fn: function () {
         const data = [
           "value",
@@ -334,7 +334,7 @@ Deno.test({
   name: "Serialize Sparse Array",
   fn: async function (t) {
     await t.step({
-      name: "Serialize object as array",
+      name: "Serialize Sparse Array: Object As Array",
       fn: function () {
         // deno-lint-ignore no-explicit-any
         assertThrows(() => serializeJsArray({} as any));
@@ -369,7 +369,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "serialize associative array",
+      name: "Serialize Sparse Array: Associative Array",
       fn: function () {
         // deno-fmt-ignore
         // deno-lint-ignore no-explicit-any
@@ -396,7 +396,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize mixed array",
+      name: "Serialize Sparse Array: Mixed Array",
       fn: function () {
         const data = [
           "value",

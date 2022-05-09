@@ -6,7 +6,7 @@ Deno.test({
   name: "Deserialize Float",
   fn: async function (t) {
     await t.step({
-      name: "Deserialize Positive Float",
+      name: "Deserialize Float: Positive Float",
       fn: function () {
         const input = DENO_CORE
           .serialize(12.69)
@@ -20,35 +20,21 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize Positive Float",
+      name: "Deserialize Float: Negative Float",
       fn: function () {
         const input = DENO_CORE
-          .serialize(12.69)
+          .serialize(-12.69)
           .subarray(2);
 
         const res = deserializeV8Float(input);
 
-        assertEquals(res, 12.69);
+        assertEquals(res, -12.69);
         assertEquals(input, new Uint8Array(input.length).fill(0));
       },
     });
 
     await t.step({
-      name: "Deserialize Positive Float",
-      fn: function () {
-        const input = DENO_CORE
-          .serialize(12.69)
-          .subarray(2);
-
-        const res = deserializeV8Float(input);
-
-        assertEquals(res, 12.69);
-        assertEquals(input, new Uint8Array(input.length).fill(0));
-      },
-    });
-
-    await t.step({
-      name: "Serialize Number.MAX_SAFE_INTEGER + 0.69",
+      name: "Deserialize Float: Number.MAX_SAFE_INTEGER + 0.69",
       fn: function () {
         const input = DENO_CORE
           .serialize(Number.MAX_SAFE_INTEGER + 0.69)
@@ -61,7 +47,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize Number.MIN_VALUE",
+      name: "Deserialize Float: Number.MIN_VALUE",
       fn: function () {
         const input = DENO_CORE
           .serialize(Number.MIN_VALUE)
@@ -75,7 +61,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize Number.EPSILON",
+      name: "Deserialize Float: Number.EPSILON",
       fn: function () {
         const input = DENO_CORE
           .serialize(Number.EPSILON)
@@ -88,7 +74,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize non float",
+      name: "Deserialize Float: Non-Float",
       fn: function () {
         const input = DENO_CORE
           .serialize(10)
@@ -103,7 +89,7 @@ Deno.test({
   name: "Serialize Float",
   fn: async function (t) {
     await t.step({
-      name: "Serialize Positive Float",
+      name: "Serialize Float: Positive Float",
       fn: function () {
         const ref = DENO_CORE
           .serialize(12.69)
@@ -116,7 +102,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize Negative Float",
+      name: "Serialize Float: Negative Float",
       fn: function () {
         const ref = DENO_CORE
           .serialize(-12.69)
@@ -129,7 +115,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize Number.MAX_SAFE_INTEGER + 0.69",
+      name: "Serialize Float: Number.MAX_SAFE_INTEGER + 0.69",
       fn: function () {
         const ref = DENO_CORE
           .serialize(Number.MAX_SAFE_INTEGER + 0.69)
@@ -142,7 +128,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize Number.MIN_VALUE",
+      name: "Serialize Float: Number.MIN_VALUE",
       fn: function () {
         const ref = DENO_CORE
           .serialize(Number.MIN_VALUE)
@@ -155,7 +141,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize Number.EPSILON",
+      name: "Serialize Float: Number.EPSILON",
       fn: function () {
         const ref = DENO_CORE
           .serialize(Number.EPSILON)
@@ -168,7 +154,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize non float",
+      name: "Serialize Float: Non-Float",
       fn: function () {
         assertThrows(() => serializeJsFloat(10));
       },

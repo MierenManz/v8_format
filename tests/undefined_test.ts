@@ -9,7 +9,7 @@ Deno.test({
   name: "Deserialize Undefined",
   fn: async function (t) {
     await t.step({
-      name: "Deserialize Undefined",
+      name: "Deserialize Undefined: Undefined",
       fn: function () {
         const serializedUndefined = DENO_CORE
           .serialize(undefined)
@@ -21,7 +21,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize non undefined",
+      name: "Deserialize Undefined: Not Undefined",
       fn: function () {
         const serializedUndefined = DENO_CORE
           .serialize(null)
@@ -37,7 +37,7 @@ Deno.test({
   name: "Serialize Undefined",
   fn: async function (t) {
     await t.step({
-      name: "Serialize undefined",
+      name: "Serialize Undefined: Undefined",
       fn: function () {
         const ref = DENO_CORE
           .serialize(undefined)
@@ -50,7 +50,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize non undefined",
+      name: "Serialize Undefined: Not Undefined",
       fn: function () {
         assertThrows(() => serializeJsUndefined(null as unknown as undefined));
       },
