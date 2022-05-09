@@ -1,3 +1,6 @@
+const MIN_INT_VALUE = -1_073_741_824;
+const MAX_INT_VALUE = 1_073_741_823;
+
 export interface ArrayMetadata {
   isSparse: boolean;
   indexedLength: number;
@@ -12,7 +15,7 @@ export function arrayMetadata<T>(array: T[]): ArrayMetadata {
   };
 
   for (const key in array) {
-    if (Number.isNaN(parseInt(key))) {
+    if (!strIsIntIndex(key)) {
       metadata.unindexedLength++;
       continue;
     }
@@ -23,6 +26,18 @@ export function arrayMetadata<T>(array: T[]): ArrayMetadata {
     metadata.isSparse = true;
   }
   return metadata;
+}
+
+/**
+ * Object keys that are strings should sometimes be serialized into integers if they can be a valid v8 signed integer.
+ */
+export function strIsIntIndex(val: string): boolean {
+  const valAsInt = parseInt(val);
+  const v = !Number.isNaN(valAsInt) &&
+    valAsInt >= MIN_INT_VALUE &&
+    valAsInt <= MAX_INT_VALUE &&
+    valAsInt === parseFloat(val);
+  return v;
 }
 
 /**

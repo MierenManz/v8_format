@@ -14,7 +14,7 @@ import {
   deserializeReference,
   serializeReference,
 } from "./object_reference.ts";
-import { consume } from "./util.ts";
+import { consume, strIsIntIndex } from "./util.ts";
 
 export function serializeJsArray<T>(
   array: T[],
@@ -31,13 +31,12 @@ export function serializeJsArray<T>(
   const serializedValues: Uint8Array[] = [];
 
   for (const key in array) {
-    const keyAsInt = parseInt(key);
-    // If key is not a number (eg is a string) then serialize it as kv pair
-    if (Number.isNaN(keyAsInt)) {
+    // If key is not a valid v8 integer then serialize it as string.
+    // Else if array is sparse serialize as v8 integer
+    if (!strIsIntIndex(key)) {
       serializedValues.push(serializeJsString(key));
-      // If key is a int and array is sparse then serialize as kv pair
     } else if (metadata.isSparse) {
-      serializedValues.push(serializeJsInteger(keyAsInt));
+      serializedValues.push(serializeJsInteger(parseInt(key)));
     }
 
     // Serialize value
