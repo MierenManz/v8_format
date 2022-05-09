@@ -1,4 +1,5 @@
-import { consume } from "./util.ts";
+import { consume } from "./_util.ts";
+
 /**
  * @param { undefined } val - undefined To Serialize
  * @returns { Uint8Array } Serialized undefined

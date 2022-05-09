@@ -1,17 +1,17 @@
 import { varintDecode, varintEncode } from "./_deps.ts";
-import { deserializeV8String, serializeJsString } from "./string.ts";
-import { deserializeV8Integer, serializeJsInteger } from "./integer.ts";
-import { deserializeV8Null } from "./null.ts";
-import { deserializeV8Float } from "./float.ts";
-import { deserializeV8Undefined } from "./undefined.ts";
+import { arrayMetadata, consume, strIsIntIndex } from "./_util.ts";
 import { deserializeV8BigInt } from "./bigint.ts";
 import { deserializeV8Boolean } from "./boolean.ts";
+import { deserializeV8Float } from "./float.ts";
+import { deserializeV8Integer, serializeJsInteger } from "./integer.ts";
+import { serializeAny } from "./mod.ts";
+import { deserializeV8Null } from "./null.ts";
 import {
   deserializeReference,
   serializeReference,
 } from "./object_reference.ts";
-import { serializeAny } from "./mod.ts";
-import { arrayMetadata, consume, strIsIntIndex } from "./util.ts";
+import { deserializeV8String, serializeJsString } from "./string.ts";
+import { deserializeV8Undefined } from "./undefined.ts";
 
 export function serializeJsArray<T>(
   array: T[],

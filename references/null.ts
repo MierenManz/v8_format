@@ -1,4 +1,5 @@
-import { consume } from "./util.ts";
+import { consume } from "./_util.ts";
+
 /**
  * @param { null } val - null To Serialize
  * @returns { Uint8Array } Serialized null

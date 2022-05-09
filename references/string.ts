@@ -1,5 +1,5 @@
 import { varintDecode, varintEncode } from "./_deps.ts";
-import { consume } from "./util.ts";
+import { consume } from "./_util.ts";
 
 /**
  * @param { string } data - String To Serialize

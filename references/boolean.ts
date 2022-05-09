@@ -1,4 +1,5 @@
-import { consume } from "./util.ts";
+import { consume } from "./_util.ts";
+
 /**
  * @param { boolean } bool - Boolean To Serialize
  * @returns { Uint8Array } Serialized JS boolean without magic bytes

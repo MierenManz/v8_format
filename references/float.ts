@@ -1,4 +1,4 @@
-import { consume } from "./util.ts";
+import { consume } from "./_util.ts";
 
 const MIN_INT_VALUE = -1_073_741_824;
 const MAX_INT_VALUE = 1_073_741_823;

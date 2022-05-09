@@ -1,5 +1,5 @@
 import { varintDecode, varintEncode } from "./_deps.ts";
-import { consume } from "./util.ts";
+import { consume } from "./_util.ts";
 
 export function serializeReference(idx: number): Uint8Array {
   const varint = varintEncode(idx)[0];
