@@ -1,7 +1,4 @@
-import {
-  decode32 as varintDecode,
-  encode as varintEncode,
-} from "https://deno.land/x/varint@v2.0.0/varint.ts";
+import { varintDecode, varintEncode } from "./_deps.ts";
 import { deserializeV8String, serializeJsString } from "./string.ts";
 import { deserializeV8Integer, serializeJsInteger } from "./integer.ts";
 import { deserializeV8Null } from "./null.ts";

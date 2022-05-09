@@ -1,7 +1,4 @@
-import {
-  decode32 as varintDecode,
-  encode as varintEncode,
-} from "https://deno.land/x/varint@v2.0.0/varint.ts";
+import { varintDecode, varintEncode } from "./_deps.ts";
 import { consume } from "./util.ts";
 const MIN_INT_VALUE = -1_073_741_824;
 const MAX_INT_VALUE = 1_073_741_823;
