@@ -8,11 +8,18 @@ import { deserializeV8String, serializeJsString } from "./string.ts";
 export function serializeJsArray<T>(
   array: T[],
   // deno-lint-ignore ban-types
-  objRefs: {}[] = [array],
+  objRefs: {}[] = [],
 ): Uint8Array {
   if (!Array.isArray(array)) {
     throw new Error("Not a JS array");
   }
+
+  if (objRefs.includes(array)) {
+    return serializeReference(objRefs.length);
+  } else {
+    objRefs.push(array);
+  }
+
   // parse metadata from array
   const metadata = arrayMetadata(array);
   const indicatorByte = metadata.isSparse ? 0x61 : 0x41;
@@ -38,7 +45,7 @@ export function serializeJsArray<T>(
       continue;
     }
 
-    serializedValues.push(serializeAny(value));
+    serializedValues.push(serializeAny(value, objRefs));
   }
 
   // varint encode amount of kvPairs
