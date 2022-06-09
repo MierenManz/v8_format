@@ -13,6 +13,26 @@ const VALUES = [
 ];
 VALUES.push(VALUES);
 
+const FULL_OBJECT: Record<string, unknown> = {
+  1.1: null,
+  key: "value",
+  int: 12,
+  float: 12.58,
+  true: true,
+  false: false,
+  null: null,
+  undefined: undefined,
+  bigint: 12n,
+  sparseArray: sparseArray(),
+  denseArray: denseArray(),
+  emptyObject: {},
+};
+
+FULL_OBJECT["denseAssociativeArray"] = associativeArray(denseArray());
+FULL_OBJECT["sparseAssociativeArray"] = associativeArray(sparseArray());
+
+VALUES.push(FULL_OBJECT);
+
 export function sparseArray() {
   const arr = new Array(3);
   arr[2] = null;
@@ -40,7 +60,7 @@ export function associativeArray<T>(baseArray: T[]): T[] {
   arr["denseArray"] = denseArray();
   arr["sparseArray"] = sparseArray();
   arr["emptyObject"] = {};
-  arr["fullObject"] = fullObject();
+  arr["fullObject"] = FULL_OBJECT;
   return arr;
 }
 
@@ -65,6 +85,9 @@ export function fullObject(): {} {
     bigint: 12n,
     sparseArray: sparseArray(),
     denseArray: denseArray(),
+    denseAssociativeArray: associativeArray(denseArray()),
+    sparseAssociativeArray: associativeArray(sparseArray()),
     emptyObject: {},
+    fullObject: FULL_OBJECT,
   };
 }
