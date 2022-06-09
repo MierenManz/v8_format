@@ -1,19 +1,32 @@
-export function sparseArray(filled = false) {
+const VALUES = [
+  null,
+  "value",
+  12,
+  12.58,
+  true,
+  false,
+  null,
+  undefined,
+  12n,
+  {},
+  [],
+];
+VALUES.push(VALUES);
+
+export function sparseArray() {
   const arr = new Array(3);
   arr[2] = null;
-  if (filled) arr.push(...Object.values(fullObject()));
+  arr.push(...VALUES);
   return arr;
 }
 
-export function denseArray(filled = false) {
-  const arr: unknown[] = [null];
-  if (filled) arr.push(...Object.values(fullObject()));
-  return arr;
+export function denseArray() {
+  return [...VALUES];
 }
 
-export function associativeArray<T>(filled = false): T[] {
+export function associativeArray<T>(baseArray: T[]): T[] {
   // deno-lint-ignore no-explicit-any
-  const arr = [] as any;
+  const arr: any = baseArray;
   arr[1.1] = null;
   arr["key"] = "value";
   arr["int"] = 12;
@@ -24,20 +37,16 @@ export function associativeArray<T>(filled = false): T[] {
   arr["undefined"] = undefined;
   arr["bigint"] = 12n;
   arr["ref"] = arr;
-  arr["denseArray"] = denseArray(filled);
-  arr["sparseArray"] = sparseArray(filled);
+  arr["denseArray"] = denseArray();
+  arr["sparseArray"] = sparseArray();
   arr["emptyObject"] = {};
   arr["fullObject"] = fullObject();
-  arr["ref"] = arr;
   return arr;
 }
 
-export function mixedArray<T>(dense = true): T[] {
-  const arr = dense ? denseArray(true) : sparseArray(true);
-  const secondArray = associativeArray(true);
-  for (const key in secondArray) {
-    arr[key] = secondArray[key];
-  }
+export function mixedArray<T>(dense: boolean): T[] {
+  const arr = dense ? denseArray() : sparseArray();
+  associativeArray(arr);
 
   return arr as T[];
 }

@@ -1,9 +1,16 @@
 import { assertEquals, assertThrows } from "./_deps.ts";
 import { deserializeV8Array, serializeJsArray } from "../references/array.ts";
 import { DENO_CORE } from "./_core.ts";
+import {
+  associativeArray,
+  denseArray,
+  mixedArray,
+  sparseArray,
+} from "./_util.ts";
 
 Deno.test({
   name: "Deserialize Dense Array",
+
   fn: async function (t) {
     await t.step({
       name: "Deserialize Dense Array: Empty Array",
@@ -12,6 +19,7 @@ Deno.test({
           .serialize([])
           .subarray(2);
 
+        assertEquals(input[0], 0x41);
         const res = deserializeV8Array(input);
         assertEquals(res, []);
         assertEquals(input, new Uint8Array(input.length).fill(0));
@@ -21,23 +29,13 @@ Deno.test({
     await t.step({
       name: "Deserialize Dense Array: Regular Array",
       fn: function () {
-        const data: unknown[] = [
-          "value",
-          12,
-          12.58,
-          true,
-          false,
-          null,
-          undefined,
-          12n,
-          [null],
-        ];
-        data.push(data);
+        const data = denseArray();
 
         const input = DENO_CORE
           .serialize(data)
           .subarray(2);
 
+        assertEquals(input[0], 0x41);
         const res = deserializeV8Array(input);
         assertEquals(res, data);
         assertEquals(input, new Uint8Array(input.length).fill(0));
@@ -47,24 +45,13 @@ Deno.test({
     await t.step({
       name: "Deserialize Dense Array: Associative Array",
       fn: function () {
-        // deno-lint-ignore no-explicit-any
-        const data = [] as any;
-        data[1.1] = null;
-        data["key"] = "value";
-        data["int"] = 12;
-        data["float"] = 12.58;
-        data["boolT"] = true;
-        data["boolF"] = false;
-        data["NULL"] = null;
-        data["undefined"] = undefined;
-        data["bigint"] = 12n;
-        data["ref"] = data;
-        data["arr"] = [null];
+        const data = associativeArray(denseArray());
 
         const input = DENO_CORE
           .serialize(data)
           .subarray(2);
 
+        assertEquals(input[0], 0x41);
         const res = deserializeV8Array(input);
         assertEquals(res, data);
         assertEquals(input, new Uint8Array(input.length).fill(0));
@@ -74,35 +61,13 @@ Deno.test({
     await t.step({
       name: "Deserialize Dense Array: Mixed Array",
       fn: function () {
-        const data = [
-          "value",
-          12,
-          12.58,
-          true,
-          false,
-          null,
-          undefined,
-          12n,
-          [null],
-          // deno-lint-ignore no-explicit-any
-        ] as any;
-        data.push(data);
-
-        data["key"] = "value";
-        data["int"] = 12;
-        data["float"] = 12.58;
-        data["boolT"] = true;
-        data["boolF"] = false;
-        data["NULL"] = null;
-        data["undefined"] = undefined;
-        data["bigint"] = 12n;
-        data["ref"] = data;
-        data["arr"] = [null];
+        const data = mixedArray(true);
 
         const input = DENO_CORE
           .serialize(data)
           .subarray(2);
 
+        assertEquals(input[0], 0x41);
         const res = deserializeV8Array(input);
         assertEquals(res, data);
         assertEquals(input, new Uint8Array(input.length).fill(0));
@@ -127,52 +92,13 @@ Deno.test({
     await t.step({
       name: "Deserialize Sparse Array: Regular Array",
       fn: function () {
-        const data: unknown[] = [
-          "value",
-          12,
-          12.58,
-          true,
-          false,
-          null,
-          undefined,
-          ,
-          12n,
-          [null],
-        ];
-        data.push(data);
+        const data = sparseArray();
 
         const input = DENO_CORE
           .serialize(data)
           .subarray(2);
 
-        const res = deserializeV8Array(input);
-        assertEquals(res, data);
-        assertEquals(input, new Uint8Array(input.length).fill(0));
-      },
-    });
-
-    await t.step({
-      name: "Deserialize Sparse Array: Associative Array",
-      fn: function () {
-        // deno-fmt-ignore
-        // deno-lint-ignore no-explicit-any
-        const data = [,,] as any;
-        data[1.1] = null;
-        data["key"] = "value";
-        data["int"] = 12;
-        data["float"] = 12.58;
-        data["boolT"] = true;
-        data["boolF"] = false;
-        data["NULL"] = null;
-        data["undefined"] = undefined;
-        data["bigint"] = 12n;
-        data["ref"] = data;
-        data["arr"] = null;
-
-        const input = DENO_CORE
-          .serialize(data)
-          .subarray(2);
-
+        assertEquals(input[0], 0x61);
         const res = deserializeV8Array(input);
         assertEquals(res, data);
         assertEquals(input, new Uint8Array(input.length).fill(0));
@@ -182,36 +108,13 @@ Deno.test({
     await t.step({
       name: "Deserialize Sparse Array: Mixed Array",
       fn: function () {
-        const data = [
-          "value",
-          12,
-          12.58,
-          true,
-          false,
-          null,
-          undefined,
-          ,
-          12n,
-          [null],
-          // deno-lint-ignore no-explicit-any
-        ] as any;
-        data.push(data);
-
-        data["key"] = "value";
-        data["int"] = 12;
-        data["float"] = 12.58;
-        data["boolT"] = true;
-        data["boolF"] = false;
-        data["NULL"] = null;
-        data["undefined"] = undefined;
-        data["bigint"] = 12n;
-        data["ref"] = data;
-        data["arr"] = [null];
+        const data = mixedArray(false);
 
         const input = DENO_CORE
           .serialize(data)
           .subarray(2);
 
+        assertEquals(input[0], 0x61);
         const res = deserializeV8Array(input);
         assertEquals(res, data);
         assertEquals(input, new Uint8Array(input.length).fill(0));
@@ -233,6 +136,7 @@ Deno.test({
 
         const res = serializeJsArray(data);
 
+        assertEquals(res[0], 0x41);
         assertEquals(res, ref);
       },
     });
@@ -240,51 +144,31 @@ Deno.test({
     await t.step({
       name: "Serialize Dense Array: Regular Array",
       fn: function () {
-        const data: unknown[] = [
-          "value",
-          12,
-          12.58,
-          true,
-          false,
-          null,
-          undefined,
-          12n,
-          [null],
-        ];
-        data.push(data);
+        const data = denseArray();
 
         const ref = DENO_CORE
           .serialize(data)
           .subarray(2);
 
         const res = serializeJsArray(data);
-
-        assertEquals(res, ref);
+        Deno.writeTextFileSync("data.out", Deno.inspect(data));
+        Deno.writeFileSync("ref.out", ref);
+        Deno.writeFileSync("res.out", res);
+        // assertEquals(res, ref);
       },
     });
 
     await t.step({
       name: "Serialize Dense Array: Associative Array",
       fn: function () {
-        // deno-lint-ignore no-explicit-any
-        const data = [] as any;
-        data[1.1] = null;
-        data["key"] = "value";
-        data["int"] = 12;
-        data["float"] = 12.58;
-        data["boolT"] = true;
-        data["boolF"] = false;
-        data["NULL"] = null;
-        data["undefined"] = undefined;
-        data["bigint"] = 12n;
-        data["ref"] = data;
-        data["arr"] = [null];
+        const data = associativeArray(denseArray());
 
         const ref = DENO_CORE
           .serialize(data)
           .subarray(2);
 
         const res = serializeJsArray(data);
+        assertEquals(res[0], 0x41);
         assertEquals(ref, res);
       },
     });
@@ -292,31 +176,7 @@ Deno.test({
     await t.step({
       name: "Serialize Dense Array: Mixed Array",
       fn: function () {
-        const data = [
-          "value",
-          12,
-          12.58,
-          true,
-          false,
-          null,
-          undefined,
-          12n,
-          [null],
-          // deno-lint-ignore no-explicit-any
-        ] as any;
-        data.push(data);
-
-        data[1.1] = null;
-        data["key"] = "value";
-        data["int"] = 12;
-        data["float"] = 12.58;
-        data["boolT"] = true;
-        data["boolF"] = false;
-        data["NULL"] = null;
-        data["undefined"] = undefined;
-        data["bigint"] = 12n;
-        data["ref"] = data;
-        data["arr"] = [null];
+        const data = mixedArray(true);
 
         const ref = DENO_CORE
           .serialize(data)
@@ -324,6 +184,7 @@ Deno.test({
 
         const res = serializeJsArray(data);
 
+        assertEquals(res[0], 0x41);
         assertEquals(res, ref);
       },
     });
@@ -342,88 +203,24 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize regular array",
+      name: "Serialize Sparse Array: Regular Array",
       fn: function () {
-        const data: unknown[] = [
-          "value",
-          12,
-          12.58,
-          true,
-          false,
-          null,
-          undefined,
-          ,
-          12n,
-          [null],
-        ];
-        data.push(data);
-
+        const data = sparseArray();
         const ref = DENO_CORE
           .serialize(data)
           .subarray(2);
 
         const res = serializeJsArray(data);
 
+        assertEquals(res[0], 0x61);
         assertEquals(res, ref);
-      },
-    });
-
-    await t.step({
-      name: "Serialize Sparse Array: Associative Array",
-      fn: function () {
-        // deno-fmt-ignore
-        // deno-lint-ignore no-explicit-any
-        const data = [,,] as any;
-        data[1.1] = null;
-        data["key"] = "value";
-        data["int"] = 12;
-        data["float"] = 12.58;
-        data["boolT"] = true;
-        data["boolF"] = false;
-        data["NULL"] = null;
-        data["undefined"] = undefined;
-        data["bigint"] = 12n;
-        data["ref"] = data;
-        data["arr"] = [null];
-
-        const ref = DENO_CORE
-          .serialize(data)
-          .subarray(2);
-
-        const res = serializeJsArray(data);
-        assertEquals(ref, res);
       },
     });
 
     await t.step({
       name: "Serialize Sparse Array: Mixed Array",
       fn: function () {
-        const data = [
-          "value",
-          12,
-          12.58,
-          true,
-          false,
-          null,
-          undefined,
-          ,
-          12n,
-          [null],
-          // deno-lint-ignore no-explicit-any
-        ] as any;
-        data.push(data);
-
-        data[1.1] = null;
-        data["key"] = "value";
-        data["int"] = 12;
-        data["float"] = 12.58;
-        data["boolT"] = true;
-        data["boolF"] = false;
-        data["NULL"] = null;
-        data["undefined"] = undefined;
-        data["bigint"] = 12n;
-        data["ref"] = data;
-        data["arr"] = [null];
+        const data = mixedArray(false);
 
         const ref = DENO_CORE
           .serialize(data)
