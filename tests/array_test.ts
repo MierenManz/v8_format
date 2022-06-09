@@ -73,6 +73,23 @@ Deno.test({
         assertEquals(input, new Uint8Array(input.length).fill(0));
       },
     });
+
+    await t.step({
+      name: "Deserialize Dense Array: self as ref",
+      fn: function () {
+        const data: unknown[] = [];
+        data[0] = data;
+
+        const input = DENO_CORE
+          .serialize(data)
+          .subarray(2);
+
+        assertEquals(input[0], 0x41);
+        const res = deserializeV8Array(input);
+        assertEquals(res, data);
+        assertEquals(input, new Uint8Array(input.length).fill(0));
+      },
+    });
   },
 });
 
@@ -124,7 +141,7 @@ Deno.test({
     await t.step({
       name: "Deserialize Sparse Array: self as ref",
       fn: function () {
-        const data: unknown[] = [];
+        const data: unknown[] = new Array(3);
         data[0] = data;
 
         const input = DENO_CORE
@@ -202,6 +219,22 @@ Deno.test({
         assertEquals(res, ref);
       },
     });
+
+    await t.step({
+      name: "Serialize Dense Array: self as ref",
+      fn: function () {
+        const data: unknown[] = [];
+        data[0] = data;
+
+        const ref = DENO_CORE
+          .serialize(data)
+          .subarray(2);
+
+        assertEquals(ref[0], 0x41);
+        const res = serializeJsArray(data);
+        assertEquals(res, ref);
+      },
+    });
   },
 });
 
@@ -242,6 +275,21 @@ Deno.test({
 
         const res = serializeJsArray(data);
 
+        assertEquals(res, ref);
+      },
+    });
+    await t.step({
+      name: "Serialize Sparse Array: self as ref",
+      fn: function () {
+        const data: unknown[] = new Array(3);
+        data[0] = data;
+
+        const ref = DENO_CORE
+          .serialize(data)
+          .subarray(2);
+
+        assertEquals(ref[0], 0x61);
+        const res = serializeJsArray(data);
         assertEquals(res, ref);
       },
     });
