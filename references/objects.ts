@@ -13,6 +13,10 @@ export function serializeJsObject(
   // deno-lint-ignore ban-types
   objRefs: {}[] = [],
 ): Uint8Array {
+  if (object.constructor.name !== "Object") {
+    throw new Error("Not a JS object");
+  }
+
   if (objRefs.includes(object)) {
     return serializeReference(objRefs.length);
   } else {
