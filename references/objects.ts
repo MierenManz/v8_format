@@ -15,8 +15,9 @@ export function serializeJsObject(
     throw new Error("Not a JS object");
   }
 
-  if (objRefs.includes(object)) {
-    return serializeReference(objRefs.length);
+  const refIdx = objRefs.indexOf(object);
+  if (refIdx > -1) {
+    return serializeReference(refIdx);
   } else {
     objRefs.push(object);
   }
