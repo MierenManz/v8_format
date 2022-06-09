@@ -3,10 +3,8 @@ import { consume, strIsIntIndex } from "./_util.ts";
 import { deserializeV8Integer, serializeJsInteger } from "./integer.ts";
 import { deserializeAny, serializeAny } from "./mod.ts";
 import { deserializeV8String, serializeJsString } from "./string.ts";
-import {
-  deserializeReference,
-  serializeReference,
-} from "./object_reference.ts";
+import { serializeReference } from "./object_reference.ts";
+
 export function serializeJsObject(
   // deno-lint-ignore ban-types
   object: {},

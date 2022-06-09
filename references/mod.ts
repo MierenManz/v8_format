@@ -2,10 +2,7 @@ import { deserializeV8Array, serializeJsArray } from "./array.ts";
 import { deserializeV8BigInt, serializeJsBigInt } from "./bigint.ts";
 import { deserializeV8Boolean, serializeJsBoolean } from "./boolean.ts";
 import { deserializeV8Float, serializeJsFloat } from "./float.ts";
-import {
-  deserializeReference,
-  serializeReference,
-} from "./object_reference.ts";
+import { deserializeReference } from "./object_reference.ts";
 import { deserializeV8Integer, serializeJsInteger } from "./integer.ts";
 import { deserializeV8Null, serializeJsNull } from "./null.ts";
 import { deserializeV8String, serializeJsString } from "./string.ts";
