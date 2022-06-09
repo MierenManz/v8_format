@@ -120,6 +120,23 @@ Deno.test({
         assertEquals(input, new Uint8Array(input.length).fill(0));
       },
     });
+
+    await t.step({
+      name: "Deserialize Sparse Array: self as ref",
+      fn: function () {
+        const data: unknown[] = [];
+        data[0] = data;
+
+        const input = DENO_CORE
+          .serialize(data)
+          .subarray(2);
+
+        assertEquals(input[0], 0x61);
+        const res = deserializeV8Array(input);
+        assertEquals(res, data);
+        assertEquals(input, new Uint8Array(input.length).fill(0));
+      },
+    });
   },
 });
 

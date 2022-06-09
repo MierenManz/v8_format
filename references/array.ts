@@ -14,8 +14,9 @@ export function serializeJsArray<T>(
     throw new Error("Not a JS array");
   }
 
-  if (objRefs.includes(array)) {
-    return serializeReference(objRefs.length);
+  const refIdx = objRefs.indexOf(array);
+  if (refIdx > -1) {
+    return serializeReference(refIdx);
   } else {
     objRefs.push(array);
   }
