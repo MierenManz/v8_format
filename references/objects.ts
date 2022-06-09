@@ -3,15 +3,23 @@ import { consume, strIsIntIndex } from "./_util.ts";
 import { deserializeV8Integer, serializeJsInteger } from "./integer.ts";
 import { deserializeAny, serializeAny } from "./mod.ts";
 import { deserializeV8String, serializeJsString } from "./string.ts";
-
+import {
+  deserializeReference,
+  serializeReference,
+} from "./object_reference.ts";
 export function serializeJsObject(
   // deno-lint-ignore ban-types
   object: {},
   // deno-lint-ignore ban-types
-  objRefs: {}[] = [object],
+  objRefs: {}[] = [],
 ): Uint8Array {
-  const values: Uint8Array[] = [Uint8Array.of(0x6F)];
+  if (objRefs.includes(object)) {
+    return serializeReference(objRefs.length);
+  } else {
+    objRefs.push(object);
+  }
 
+  const values: Uint8Array[] = [Uint8Array.of(0x6F)];
   for (const [key, value] of Object.entries(object)) {
     const keySerialized = strIsIntIndex(key)
       ? serializeJsInteger(parseInt(key))
@@ -21,7 +29,6 @@ export function serializeJsObject(
 
   // Push ending byte and length
   values.push(Uint8Array.of(0x7B), varintEncode(Object.keys(object).length)[0]);
-
   // Create new slice
   const serializedData = new Uint8Array(
     values.reduce((x, y) => x + y.length, 0),
