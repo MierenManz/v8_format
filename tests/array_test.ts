@@ -151,10 +151,7 @@ Deno.test({
           .subarray(2);
 
         const res = serializeJsArray(data);
-        Deno.writeTextFileSync("data.out", Deno.inspect(data));
-        Deno.writeFileSync("ref.out", ref);
-        Deno.writeFileSync("res.out", res);
-        // assertEquals(res, ref);
+        assertEquals(res, ref);
       },
     });
 
