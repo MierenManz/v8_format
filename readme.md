@@ -8,10 +8,10 @@ representation back to a js value used by the [V8 Engine](https://v8.dev).
 
 The format always starts with 2 header bytes `0xFF 0x0F` Then it will use a
 indicator byte to tell the deserializer on how to deserialize the next section
-of bytes. All format examples include the 2 header bytes but these are only
-needed at the beginning of the whole serialized data, not per type. The
-reference serializers and deserializers don't include these bytes and only have
-to be checked to be valid.
+of bytes. None of the format examples include the 2 header bytes but these are
+needed at the beginning of the serialized data. The reference serializers and
+deserializers don't include these bytes. But the `serialize` and `deserialize`
+api's in `references/mod.ts` do add these bytes
 
 ## Primitive Types
 
