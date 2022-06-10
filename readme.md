@@ -59,7 +59,6 @@ string and then the raw data.
 serializing a string like `HelloWorld` this will look like this.
 
 ```
-0xFF  0x0F    Magic bytes
 0x22  0x0A    String indicator byte and varint encoded length
 0x48  0x65    He
 0x6C  0x6C    ll
@@ -80,7 +79,6 @@ multiple bytes. Like emoji's or non-latin languages like arabic
 serializing `Hi!😃`
 
 ```
-0xFF  0x0F    Magic bytes
 0x63  0x0A    String indicator byte and varint encoded length
 0x48  0x00    H (UTF-8 characters don't need a second byte. Therefore null byte)
 0x69  0x00    i
@@ -112,14 +110,12 @@ some examples
 Negative Integer -12
 
 ```
-0xFF  0x0F    Magic bytes
 0x49  0x17    Indicator byte then zigzag encoded + varint encoded value
 ```
 
 Positive Integer 12
 
 ```
-0xFF  0x0F    Magic bytes
 0x49  0x18    Indicator byte then zigzag encoded + varint encoded value
 ```
 
@@ -145,7 +141,6 @@ a unknown size
 Negative BigInt -12
 
 ```
-0xFF  0x0F    Magic bytes
 0x5A  0x11    BigInt indicator byte and Varint bitfield.
 0x0C  0x00    Bigint value...
 0x00  0x00
@@ -156,7 +151,6 @@ Negative BigInt -12
 Positive BigInt 12
 
 ```
-0xFF  0x0F    Magic bytes
 0x5A  0x10    BigInt indicator byte and Varint bitfield.
 0x0C  0x00    Bigint value...
 0x00  0x00
@@ -176,7 +170,6 @@ float format is by far the easiest one to understand. You only have an indicator
 byte `N` (0x4E) and then the float value as 64 bit float (or double)
 
 ```
-0xFF  0x0F    Magic bytes
 0x4E  0x00    Indicator byte and first byte of the 64 bit float
 0x00  0x00    bytes of the float(12.69)
 0x00  0x00
@@ -193,14 +186,12 @@ value and type. `F` (0x46) and `T` (0x54) Are the boolean type indicators where
 False
 
 ```
-0xFF  0x0F    Magic bytes
 0x46          Indicator byte False
 ```
 
 True
 
 ```
-0xFF  0x0F    Magic bytes
 0x54          Indicator byte True
 ```
 
@@ -210,7 +201,6 @@ The null format is effectively the same as the boolean format. Just that the
 indicator byte changed to `0` (0x30).
 
 ```
-0xFF  0x0F    Magic bytes
 0x30          Indicator byte Null
 ```
 
@@ -220,7 +210,6 @@ Let's repeat the easiest format once again. For `undefined` the format is still
 the same as null and booleans but the byte changed once again to `_` (0x5F)
 
 ```
-0xFF  0x0F    Magic bytes
 0x5F          Indicator byte Undefined
 ```
 
@@ -300,7 +289,6 @@ a dense associated array)
 Dense Array `[null, null]`
 
 ```
-0xFF  0x0F    Magic bytes
 0x41  0x02    Indicator byte + varint encoded array length
 0x30  0x30    null null
 0x24  0x00    Ending byte + varint encoded kv pair length
@@ -310,7 +298,6 @@ Dense Array `[null, null]`
 Sparse Array `[null, ,null]`
 
 ```
-0xFF  0x0F    Magic bytes
 0x61  0x03    Indicator byte + varint encoded array length
 0x49  0x00    Integer indicator byte + varint encoded index
 0x30  0x49    null + Integer indicator byte
@@ -322,7 +309,6 @@ Sparse Array `[null, ,null]`
 Dense Associated Array `const arr = [null, null]; arr["k"] = null;`
 
 ```
-0xFF  0x0F    Magic bytes
 0x41  0x02    Indicator byte + varint encoded array length
 0x30  0x30    null null
 0x22  0x01    string indicator byte + varint encoded string length
@@ -334,7 +320,6 @@ Dense Associated Array `const arr = [null, null]; arr["k"] = null;`
 Sparse Array `const arr = [null, ,null]; arr["k"] = null;`
 
 ```
-0xFF  0x0F    Magic bytes
 0x61  0x03    Indicator byte + varint encoded array length
 0x49  0x00    Integer indicator byte + varint encoded index
 0x30  0x49    null + Integer indicator byte
