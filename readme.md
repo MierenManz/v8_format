@@ -9,7 +9,7 @@ representation back to a js value used by the [V8 Engine](https://v8.dev).
 The format always starts with 2 header bytes `0xFF 0x0F` Then it will use a
 indicator byte to tell the deserializer on how to deserialize the next section
 of bytes. All format examples include the 2 header bytes but these are only
-needed at the beginning of the whole serialized data, not per format. The
+needed at the beginning of the whole serialized data, not per type. The
 reference serializers and deserializers don't include these bytes and only have
 to be checked to be valid.
 
@@ -224,17 +224,17 @@ the same as null and booleans but the byte changed once again to `_` (0x5F)
 0x5F          Indicator byte Undefined
 ```
 
-## Object Types
+## Referable Types
 
-Object types are a lot more complex than meets the eye. It looks fairly simple
-until you realise that javascript is a quirky language that allows things like
-associative arrays and arrays where there are empty elements or referencing a
-object in itself creating recursive references. This makes (de)serializing
-objects a lot more complex than a simple primitive. Luckily not all objects work
-with the format tho. Only the following work
+Referable types are a lot more complex than meets the eye. It looks fairly
+simple until you realise that javascript is a quirky language that allows things
+like associative arrays and arrays where there are empty elements or referencing
+a object in itself creating recursive references. This makes (de)serializing
+referable types a lot more complex than a simple primitive. For external use of
+the v8 format the following referable types work with it.
 
 - [Object References](#object-references)
-- Array
+- [Array](#array)
 - Object literals
 - User created classes
 - ArrayBuffer
@@ -245,6 +245,10 @@ with the format tho. Only the following work
 - Date
 - Regex
 - Error
+
+These do not work outside of v8 or v8 bindings due to them serializing into a ID
+that v8 holds the value for.
+
 - SharedArrayBuffer (not usable outside v8)
 - WebAssembly.Module (not usable outside v8)
 - WebAssembly.Memory (not usable outside v8)
@@ -274,3 +278,69 @@ specific example because both values reference the same object. If the object
 has 2 identical objects like 2x `{}` then it will not use a reference because
 they're not the same object but rather 2 individuals that have the same inner
 values and structure.
+
+### Array
+
+Arrays are a lot more complex than meets the eye. They can do quite a few quirky
+things like indexing then with strings `myArray["HelloWorld"] = 12;`. But they
+also allow empty slots. An empty slot is unique. It's not filled with anything
+like `null` or `undefined` (it does map to undefined) but there is nothing.
+Which we need to keep in mind when (de)serializing an array. We effectively got
+4 types of arrays to keep in mind (you could argue that there are 5. Which is
+only a associated array without any regular slots. But this would be the same as
+a dense associated array)
+
+1. Dense Array (all allocated slots are occupied)
+2. Sparse Array (some allocated slots are not used)
+3. Dense Associated Array (all allocated slots are occupied & some values are
+   indexed by strings)
+4. Sparse Associated Array (some allocated slots are not used & some values are
+   indexed by strings)
+
+Dense Array `[null, null]`
+
+```
+0xFF  0x0F    Magic bytes
+0x41  0x02    Indicator byte + varint encoded array length
+0x30  0x30    null null
+0x24  0x00    Ending byte + varint encoded kv pair length
+0x02          Varint encoded slot count (array length)
+```
+
+Sparse Array `[null, ,null]`
+
+```
+0xFF  0x0F    Magic bytes
+0x61  0x03    Indicator byte + varint encoded array length
+0x49  0x00    Integer indicator byte + varint encoded index
+0x30  0x49    null + Integer indicator byte
+0x04  0x30    varint encoded index + null
+0x40  0x02    Ending byte + varint encoded kv pairs length
+0x03          Varint encoded slot count (array length)
+```
+
+Dense Associated Array `const arr = [null, null]; arr["k"] = null;`
+
+```
+0xFF  0x0F    Magic bytes
+0x41  0x02    Indicator byte + varint encoded array length
+0x30  0x30    null null
+0x22  0x01    string indicator byte + varint encoded string length
+0x6B  0x30    key "k" + null
+0x24  0x01    Ending byte + varint encoded kv pair length
+0x02          Varint encoded slot count (array length)
+```
+
+Sparse Array `const arr = [null, ,null]; arr["k"] = null;`
+
+```
+0xFF  0x0F    Magic bytes
+0x61  0x03    Indicator byte + varint encoded array length
+0x49  0x00    Integer indicator byte + varint encoded index
+0x30  0x49    null + Integer indicator byte
+0x04  0x30    varint encoded index + null
+0x22  0x01    string indicator byte + varint encoded string length
+0x6B  0x30    key "k" + null
+0x40  0x03    Ending byte + varint encoded kv pairs length
+0x03          Varint encoded slot count (array length)
+```
