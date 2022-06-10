@@ -329,3 +329,52 @@ Sparse Array `const arr = [null, ,null]; arr["k"] = null;`
 0x40  0x03    Ending byte + varint encoded kv pairs length
 0x03          Varint encoded slot count (array length)
 ```
+
+### Classes & Plain Objects
+
+Classes and plain objects are the same to v8's binary format. They both have the
+indicator byte 0x6F `o` and ending byte 0x7B `{`. They're both just key value
+pairs that are kinda similar to associative arrays. The difference being that
+each value has a key. Which is not always the case with associative arrays (if
+they're dense for example). In all other ways they're pretty much the same. One
+thing that is special about objects is that string keys that can be integers
+will be stored as integers. so an object like this `{ "12": null }` will have 12
+as a integer rather than a string
+
+empty object `{}`
+
+```
+0x6F  0x7B    Object Indicator byte `o` & Ending byte `{`
+0x00          Varint encoded kv pair count
+```
+
+object with string keys `{ k: null }`
+
+```
+0x6F  0x22    Object indicator byte `o` & string indicator byte `"`
+0x01  0x6B    Varint encoded string length & byte `0x6B` key `k`
+0x30  0x7B    Value null & ending byte
+0x01          Varint encoded kv pair count
+```
+
+object with integer keys `{ 12: null, "13": null }`
+
+```
+0x6F  0x49    Object indicator byte `o` & signed int indicator byte `I`
+0x18  0x30    Varint encoded integer as key and null as value
+0x49  0x1A    Signed int indicator byte `I` & integer as key
+0x30  0x7B    Null as value & ending byte
+0x02          Varint encoded kv pair count
+```
+
+object with string & integer keys `{ k: null, 12: null, "13": null }`
+
+```
+0x6F  0x49    Object indicator byte `o` & signed int indicator byte `I`
+0x18  0x30    Varint encoded integer as key and null as value
+0x49  0x1A    Signed int indicator byte `I` & integer as key
+0x30  0x22    Null as value & string indicator byte
+0x01  0x6B    Varint encoded string length & byte `k`
+0x30  0x7B    Null as value & ending byte
+0x03          Varint encoded kv pair count
+```
