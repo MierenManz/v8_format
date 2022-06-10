@@ -289,7 +289,7 @@ a dense associated array)
 Dense Array `[null, null]`
 
 ```
-0x41  0x02    Indicator byte + varint encoded array length
+0x41  0x02    Dense array indicator byte + varint encoded array length
 0x30  0x30    null null
 0x24  0x00    Ending byte + varint encoded kv pair length
 0x02          Varint encoded slot count (array length)
@@ -298,7 +298,7 @@ Dense Array `[null, null]`
 Sparse Array `[null, ,null]`
 
 ```
-0x61  0x03    Indicator byte + varint encoded array length
+0x61  0x03    Sparse array indicator byte + varint encoded array length
 0x49  0x00    Integer indicator byte + varint encoded index
 0x30  0x49    null + Integer indicator byte
 0x04  0x30    varint encoded index + null
@@ -309,7 +309,7 @@ Sparse Array `[null, ,null]`
 Dense Associated Array `const arr = [null, null]; arr["k"] = null;`
 
 ```
-0x41  0x02    Indicator byte + varint encoded array length
+0x41  0x02    Dense array indicator byte + varint encoded array length
 0x30  0x30    null null
 0x22  0x01    string indicator byte + varint encoded string length
 0x6B  0x30    key "k" + null
@@ -320,7 +320,7 @@ Dense Associated Array `const arr = [null, null]; arr["k"] = null;`
 Sparse Array `const arr = [null, ,null]; arr["k"] = null;`
 
 ```
-0x61  0x03    Indicator byte + varint encoded array length
+0x61  0x03    Sparse array indicator byte + varint encoded array length
 0x49  0x00    Integer indicator byte + varint encoded index
 0x30  0x49    null + Integer indicator byte
 0x04  0x30    varint encoded index + null
