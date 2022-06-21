@@ -226,7 +226,7 @@ the v8 format the following referable types work with it.
 - [Array](#array)
 - [Object literals](#classes--plain-objects)
 - [User created classes](#classes--plain-objects)
-- ArrayBuffer
+- [ArrayBuffer](#arraybuffer)
 - Uint*Array (where * is 8, 16, 32 or 64)
 - Int*Array (where * is 8, 16, 32 or 64)
 - Map
@@ -377,4 +377,21 @@ object with string & integer keys `{ k: null, 12: null, "13": null }`
 0x01  0x6B    Varint encoded string length & byte `k`
 0x30  0x7B    Null as value & ending byte
 0x03          Varint encoded kv pair count
+```
+
+### ArrayBuffer
+`ArrayBuffer` is the raw datastore for typed array's like `Uint8Array`. You cannot interact with it directly. But only via `DataView` or a typed array. It's indicator byte is 0x42 `B`
+
+empty ArrayBuffer(4)
+```
+0x42 0x04    ArrayBuffer indicator byte `B` & varint encoded length
+0x00 0x00    Bytes in the ArrayBuffer
+0x00 0x00    Bytes in the ArrayBuffer
+```
+
+ArrayBuffer with content `[1,2,3,4]`
+```
+0x42 0x04    ArrayBuffer indicator byte `B` & varint encoded length
+0x01 0x02    Bytes in de ArrayBuffer
+0x03 0x04    Bytes in de ArrayBuffer
 ```
