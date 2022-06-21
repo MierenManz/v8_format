@@ -25,11 +25,11 @@ Primitive values are the following values:
 - [null](#null-format)
 - [undefined](#undefined-format)
 
-Null is also included in this list eventho they're technically objects. The
-difference between a primitive and a object is for example how they're passed as
-function argument. It is handy to know the difference because objects have a few
-quirks that primitives don't. But we'll get into that later in the
-[Object Types](#object-types) section.
+Null is also included in this list eventho it's technically a object but works
+like a primitive. The difference between a primitive and a object is for example
+how they're passed as function argument. It is handy to know the difference
+because objects have a few quirks that primitives don't. But we'll get into that
+later in the [Object Types](#object-types) section.
 
 ### String Formats
 
