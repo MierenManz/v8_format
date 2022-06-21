@@ -240,7 +240,8 @@ that v8 holds the value for.
 
 - SharedArrayBuffer (not usable outside v8)
 - WebAssembly.Module (not usable outside v8)
-- WebAssembly.Memory (not usable outside v8) (only serializable when `shared = true`)
+- WebAssembly.Memory (not usable outside v8) (only serializable when
+  `shared = true`)
 
 ### Object References
 
@@ -380,9 +381,13 @@ object with string & integer keys `{ k: null, 12: null, "13": null }`
 ```
 
 ### ArrayBuffer
-`ArrayBuffer` is the raw datastore for typed array's like `Uint8Array`. You cannot interact with it directly. But only via `DataView` or a typed array. It's indicator byte is 0x42 `B`
+
+`ArrayBuffer` is the raw datastore for typed array's like `Uint8Array`. You
+cannot interact with it directly. But only via `DataView` or a typed array. It's
+indicator byte is 0x42 `B`
 
 empty ArrayBuffer(4)
+
 ```
 0x42 0x04    ArrayBuffer indicator byte `B` & varint encoded length
 0x00 0x00    Bytes in the ArrayBuffer
@@ -390,6 +395,7 @@ empty ArrayBuffer(4)
 ```
 
 ArrayBuffer with content `[1,2,3,4]`
+
 ```
 0x42 0x04    ArrayBuffer indicator byte `B` & varint encoded length
 0x01 0x02    Bytes in de ArrayBuffer
