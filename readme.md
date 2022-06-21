@@ -224,8 +224,8 @@ the v8 format the following referable types work with it.
 
 - [Object References](#object-references)
 - [Array](#array)
-- Object literals
-- User created classes
+- [Object literals](#classes--plain-objects)
+- [User created classes](#classes--plain-objects)
 - ArrayBuffer
 - Uint*Array (where * is 8, 16, 32 or 64)
 - Int*Array (where * is 8, 16, 32 or 64)
@@ -240,7 +240,7 @@ that v8 holds the value for.
 
 - SharedArrayBuffer (not usable outside v8)
 - WebAssembly.Module (not usable outside v8)
-- WebAssembly.Memory (not usable outside v8)
+- WebAssembly.Memory (not usable outside v8) (only serializable when `shared = true`)
 
 ### Object References
 
