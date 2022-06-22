@@ -1,5 +1,5 @@
 import { varintDecode, varintEncode } from "./_deps.ts";
-import { arrayMetadata, consume, strIsIntIndex } from "./_util.ts";
+import { arrayMetadata, consume } from "./_util.ts";
 import { deserializeV8Integer, serializeJsInteger } from "./integer.ts";
 import { deserializeAny, serializeAny } from "./mod.ts";
 import { serializeReference } from "./object_reference.ts";
@@ -32,14 +32,16 @@ export function serializeJsArray<T>(
     indexedValuesVarint,
   ];
 
+  let count = 0;
   for (const key in array) {
     // If key is not a valid v8 integer then serialize it as string.
     // Else if array is sparse serialize as v8 integer
-    if (!strIsIntIndex(key)) {
+    if (count >= metadata.indexedLength) {
       serializedValues.push(serializeJsString(key));
     } else if (metadata.isSparse) {
       serializedValues.push(serializeJsInteger(parseInt(key)));
     }
+    count++;
 
     // Serialize value
     const value = array[key];

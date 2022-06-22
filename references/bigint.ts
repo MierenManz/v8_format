@@ -54,23 +54,15 @@ export function deserializeV8BigInt(data: Uint8Array): bigint {
   if (data[0] !== 0x5A) throw new Error("Not a v8 bigint");
   // Decode varint bitfield
   const [bitfield, bytesUsed] = varintDecode(data, 1);
-  // Check if bigint should be negative
-  const isNegative = bitfield % 16 === 1;
   const bigintCount = bitfield / 16 | 0;
-  // Create a new dataview and ArrayBuffer
-  const bigintDataSlice = data.slice(bytesUsed, bytesUsed + bigintCount * 8);
   // Create bigint dataview
-  const u64Array = new BigUint64Array(bigintDataSlice.buffer);
-  // Reverse so that we get the right order
-  u64Array.reverse();
+  const dataview = new DataView(data.buffer, data.byteOffset + bytesUsed);
 
   let num = 0n;
-  for (const bg of u64Array) {
-    // Bitshift to make room for the new u64
-    num <<= 64n;
-    // Add the bit values of the new u64 to the current value
-    num |= bg;
+  for (let i = 0; i < bigintCount; i++) {
+    num = num << 64n | dataview.getBigUint64((bigintCount - i) * 8 - 8, true);
   }
+
   consume(data, bigintCount * 8 + bytesUsed);
-  return isNegative ? -num : num;
+  return (bitfield % 16 === 1) ? -num : num;
 }

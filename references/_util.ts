@@ -8,7 +8,7 @@ export interface ArrayMetadata {
 }
 
 export function arrayMetadata<T>(array: T[]): ArrayMetadata {
-  const metadata: ArrayMetadata = {
+  const metadata = {
     isSparse: false,
     indexedLength: 0,
     unindexedLength: 0,
@@ -22,9 +22,7 @@ export function arrayMetadata<T>(array: T[]): ArrayMetadata {
     metadata.indexedLength++;
   }
 
-  if (metadata.indexedLength !== array.length) {
-    metadata.isSparse = true;
-  }
+  metadata.isSparse = metadata.indexedLength !== array.length;
   return metadata;
 }
 
