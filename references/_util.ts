@@ -39,6 +39,14 @@ export function strIsIntIndex(val: string): boolean {
     valAsInt === parseFloat(val);
 }
 
+export function isValidInt(val: number): boolean {
+  const valAsInt = val | 0;
+  return valAsInt === val &&
+    !Number.isNaN(valAsInt) &&
+    valAsInt >= MIN_INT_VALUE &&
+    valAsInt <= MAX_INT_VALUE;
+}
+
 /**
  * copy bytes to the front of the array and nullifying data behind it.
  * effectively consuming it

@@ -3,7 +3,7 @@ import { consume } from "./_util.ts";
 
 export function serializeReference(idx: number): Uint8Array {
   const varint = varintEncode(idx)[0];
-  return new Uint8Array([0x5E, ...varint]);
+  return Uint8Array.of(0x5E, ...varint);
 }
 
 export function deserializeReference(

@@ -8,7 +8,7 @@ import { deserializeV8Null, serializeJsNull } from "./null.ts";
 import { deserializeV8String, serializeJsString } from "./string.ts";
 import { deserializeV8Undefined, serializeJsUndefined } from "./undefined.ts";
 import { deserializeV8Object, serializeJsObject } from "./objects.ts";
-
+import { isValidInt } from "./_util.ts";
 // deno-lint-ignore no-explicit-any ban-types
 export function serializeAny(value: any, objRefs: {}[] = []): Uint8Array {
   switch (typeof value) {
@@ -17,14 +17,9 @@ export function serializeAny(value: any, objRefs: {}[] = []): Uint8Array {
     case "boolean":
       return serializeJsBoolean(value);
     case "number": {
-      let serialized: Uint8Array;
-      try {
-        serialized = serializeJsInteger(value);
-      } catch {
-        serialized = serializeJsFloat(value);
-      }
-
-      return serialized;
+      return isValidInt(value)
+        ? serializeJsInteger(value)
+        : serializeJsFloat(value);
     }
 
     case "string":

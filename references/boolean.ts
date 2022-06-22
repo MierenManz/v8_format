@@ -6,11 +6,7 @@ import { consume } from "./_util.ts";
  */
 export function serializeJsBoolean(bool: boolean): Uint8Array {
   if (typeof bool !== "boolean") throw new Error("Not a boolean");
-  if (bool) {
-    return new Uint8Array([0x54]);
-  }
-
-  return new Uint8Array([0x46]);
+  return Uint8Array.of(bool ? 0x54 : 0x46);
 }
 
 /**
@@ -19,12 +15,9 @@ export function serializeJsBoolean(bool: boolean): Uint8Array {
  * @returns { boolean } Deserialized boolean
  */
 export function deserializeV8Boolean(data: Uint8Array): boolean {
-  if (data[0] === 0x54 || data[0] === 0x46) {
-    const bool = data[0] === 0x54;
-    // Consume bytes (this is so that we don't need to pass a offset to the next deserialize function)
-    consume(data, 1);
-    return bool;
-  }
-
-  throw new Error("Not a v8 boolean");
+  const bool = data[0];
+  if (bool !== 0x54 && bool !== 0x46) throw new Error("Not a v8 boolean");
+  // Consume bytes (this is so that we don't need to pass a offset to the next deserialize function)
+  consume(data, 1);
+  return bool === 0x54;
 }

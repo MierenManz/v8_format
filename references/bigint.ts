@@ -17,7 +17,7 @@ export function serializeJsBigInt(value: bigint): Uint8Array {
   // Bitshift by 64 bits until value is 0
   while (value !== 0n) {
     // Push u64's
-    bigintArray.push(BigInt.asUintN(64, value));
+    bigintArray.push(value);
     value >>= 64n;
   }
 

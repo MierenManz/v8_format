@@ -16,13 +16,12 @@ export function serializeJsFloat(float: number): Uint8Array {
     throw new Error("Not a float");
   }
 
-  const ab = new ArrayBuffer(9);
-  const binaryView = new Uint8Array(ab);
+  const binaryView = new Uint8Array(9);
 
   binaryView[0] = 0x4E;
 
   // Set float64 at offset=1 as little endian
-  new DataView(ab).setFloat64(1, float, true);
+  new DataView(binaryView.buffer).setFloat64(1, float, true);
 
   return binaryView;
 }
@@ -35,7 +34,7 @@ export function serializeJsFloat(float: number): Uint8Array {
 export function deserializeV8Float(data: Uint8Array): number {
   if (data[0] !== 0x4E) throw new Error("Not a v8 float");
   // Create new slice
-  const dt = new DataView(data.slice(1).buffer);
+  const dt = new DataView(data.buffer, data.byteOffset + 1);
   const val = dt.getFloat64(0, true);
   // Consume bytes (this is so that we don't need to pass a offset to the next deserialize function)
   consume(data, 9);
