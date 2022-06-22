@@ -16,5 +16,5 @@ export function deserializeArrayBuffer(data: Uint8Array): ArrayBuffer {
   if (data[0] !== 0x42) throw new Error("Not a serialized ArrayBuffer");
   const [_, offset] = varintDecode(data, 1);
   const ab = Uint8Array.from(data.subarray(offset));
-  return ab;
+  return ab.buffer;
 }
