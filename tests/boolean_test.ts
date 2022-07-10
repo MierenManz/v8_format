@@ -9,7 +9,7 @@ Deno.test({
   name: "Deserialize Boolean",
   fn: async function (t) {
     await t.step({
-      name: "Deserialize true",
+      name: "Deserialize Boolean: True",
       fn: function () {
         const input = DENO_CORE
           .serialize(true)
@@ -23,7 +23,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize false",
+      name: "Deserialize Boolean: False",
       fn: function () {
         const input = DENO_CORE
           .serialize(false)
@@ -37,7 +37,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize not a boolean",
+      name: "Deserialize Boolean: Not A Boolean",
       fn: function () {
         const serializedBoolean = DENO_CORE
           .serialize(0)
@@ -53,7 +53,7 @@ Deno.test({
   name: "Serialize Boolean",
   fn: async function (t) {
     await t.step({
-      name: "Serialize true",
+      name: "Serialize Boolean: True",
       fn: function () {
         const ref = DENO_CORE
           .serialize(true)
@@ -66,7 +66,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize false",
+      name: "Serialize Boolean: False",
       fn: function () {
         const ref = DENO_CORE
           .serialize(false)
@@ -79,7 +79,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize not a boolean",
+      name: "Serialize Boolean: Not A Boolean",
       fn: function () {
         assertThrows(() => serializeJsBoolean(0 as unknown as boolean));
       },

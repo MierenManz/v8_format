@@ -9,7 +9,7 @@ Deno.test({
   name: "Deserialize String",
   fn: async function (t) {
     await t.step({
-      name: "Deserialize One-Byte String",
+      name: "Deserialize String: One-Byte String",
       fn: function () {
         const input = DENO_CORE
           .serialize("Hello World!")
@@ -22,7 +22,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize Two-Byte String",
+      name: "Deserialize String: Two-Byte String",
       fn: function () {
         const input = DENO_CORE
           .serialize("Hello World! 😃")
@@ -35,7 +35,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize non string",
+      name: "Deserialize String: Non-String",
       fn: function () {
         const input = DENO_CORE
           .serialize(null)
@@ -51,7 +51,7 @@ Deno.test({
   name: "Serialize String",
   fn: async function (t) {
     await t.step({
-      name: "Serialize One-Byte String",
+      name: "Serialize String: One-Byte String",
       fn: function () {
         const ref = DENO_CORE
           .serialize("Hello World!")
@@ -64,7 +64,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize Two-Byte String",
+      name: "Serialize String: Two-Byte String",
       fn: function () {
         const ref = DENO_CORE
           .serialize("Hello World! 😃")
@@ -77,7 +77,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize non string",
+      name: "Serialize String: Non-String",
       fn: function () {
         assertThrows(() => serializeJsString(null as unknown as string));
       },

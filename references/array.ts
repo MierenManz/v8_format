@@ -8,16 +8,29 @@ import { deserializeV8String, serializeJsString } from "./string.ts";
 export function serializeJsArray<T>(
   array: T[],
   // deno-lint-ignore ban-types
-  objRefs: {}[] = [array],
+  objRefs: {}[] = [],
 ): Uint8Array {
   if (!Array.isArray(array)) {
     throw new Error("Not a JS array");
   }
+
+  const refIdx = objRefs.indexOf(array);
+  if (refIdx > -1) {
+    return serializeReference(refIdx);
+  }
+  objRefs.push(array);
+
   // parse metadata from array
   const metadata = arrayMetadata(array);
   const indicatorByte = metadata.isSparse ? 0x61 : 0x41;
   const endingByte = metadata.isSparse ? 0x40 : 0x24;
-  const serializedValues: Uint8Array[] = [];
+
+  // varint encode length of array
+  const indexedValuesVarint = varintEncode(array.length)[0];
+  const serializedValues = [
+    Uint8Array.of(indicatorByte),
+    indexedValuesVarint,
+  ];
 
   for (const key in array) {
     // If key is not a valid v8 integer then serialize it as string.
@@ -38,7 +51,7 @@ export function serializeJsArray<T>(
       continue;
     }
 
-    serializedValues.push(serializeAny(value));
+    serializedValues.push(serializeAny(value, objRefs));
   }
 
   // varint encode amount of kvPairs
@@ -48,17 +61,9 @@ export function serializeJsArray<T>(
       : metadata.unindexedLength,
   )[0];
 
-  // varint encode length of array
-  const indexedValuesVarint = varintEncode(array.length)[0];
-
-  // Shift beginning byte and arrayLength into the Uint8Array[]
-  serializedValues.unshift(
-    new Uint8Array([indicatorByte, ...indexedValuesVarint]),
-  );
-
   // Push array ending byte and lengths into the Uint8Array[]
   serializedValues.push(
-    new Uint8Array([endingByte]),
+    Uint8Array.of(endingByte),
     kvPairsVarint,
     indexedValuesVarint,
   );

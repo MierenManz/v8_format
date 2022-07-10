@@ -7,7 +7,8 @@ import { deserializeV8Integer, serializeJsInteger } from "./integer.ts";
 import { deserializeV8Null, serializeJsNull } from "./null.ts";
 import { deserializeV8String, serializeJsString } from "./string.ts";
 import { deserializeV8Undefined, serializeJsUndefined } from "./undefined.ts";
-
+import { deserializeV8Object, serializeJsObject } from "./objects.ts";
+import { isValidInt } from "./_util.ts";
 // deno-lint-ignore no-explicit-any ban-types
 export function serializeAny(value: any, objRefs: {}[] = []): Uint8Array {
   switch (typeof value) {
@@ -16,14 +17,9 @@ export function serializeAny(value: any, objRefs: {}[] = []): Uint8Array {
     case "boolean":
       return serializeJsBoolean(value);
     case "number": {
-      let serialized: Uint8Array;
-      try {
-        serialized = serializeJsInteger(value);
-      } catch {
-        serialized = serializeJsFloat(value);
-      }
-
-      return serialized;
+      return isValidInt(value)
+        ? serializeJsInteger(value)
+        : serializeJsFloat(value);
     }
 
     case "string":
@@ -38,14 +34,12 @@ export function serializeAny(value: any, objRefs: {}[] = []): Uint8Array {
 
       if (Array.isArray(value)) {
         // Array (either dense or sparse)
-        objRefs.push(value);
         return serializeJsArray(value, objRefs);
       }
 
       if (value instanceof Object) {
         // Plain object
-        objRefs.push(value);
-        // return serializeObject(value, objRefs);
+        return serializeJsObject(value, objRefs);
       }
 
       throw new Error("Object cannot be serialized");
@@ -88,6 +82,9 @@ export function deserializeAny(data: Uint8Array, objRefs: {}[] = []): any {
     // Object Reference
     case 0x5E:
       return deserializeReference(data, objRefs);
+    // Object
+    case 0x6F:
+      return deserializeV8Object(data, objRefs);
     default:
       throw new Error("Could not deserialize value");
   }

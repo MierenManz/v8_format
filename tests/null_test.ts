@@ -6,7 +6,7 @@ Deno.test({
   name: "Deserialize Null",
   fn: async function (t) {
     await t.step({
-      name: "Deserialize Null",
+      name: "Deserialize Null: Null",
       fn: function () {
         const input = DENO_CORE
           .serialize(null)
@@ -19,7 +19,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Deserialize non null",
+      name: "Deserialize Null: Non-Null",
       fn: function () {
         const serializedUndefined = DENO_CORE
           .serialize(undefined)
@@ -35,7 +35,7 @@ Deno.test({
   name: "Serialize Null",
   fn: async function (t) {
     await t.step({
-      name: "Serialize null",
+      name: "Serialize Null: Null",
       fn: function () {
         const ref = DENO_CORE
           .serialize(null)
@@ -48,7 +48,7 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize non null",
+      name: "Serialize Null: Non-Null",
       fn: function () {
         assertThrows(() => serializeJsNull(undefined as unknown as null));
       },

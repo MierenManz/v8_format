@@ -5,11 +5,8 @@ import { consume } from "./_util.ts";
  * @returns { Uint8Array } Serialized null
  */
 export function serializeJsNull(val: null): Uint8Array {
-  if (val === null) {
-    return new Uint8Array([0x30]);
-  }
-
-  throw new Error("Not Null");
+  if (val !== null) throw new Error("Not Null");
+  return Uint8Array.of(0x30);
 }
 
 /**
@@ -20,10 +17,8 @@ export function serializeJsNull(val: null): Uint8Array {
 export function deserializeV8Null(
   data: Uint8Array,
 ): null {
-  if (data[0] === 0x30) {
-    // Consume bytes (this is so that we don't need to pass a offset to the next deserialize function)
-    consume(data, 1);
-    return null;
-  }
-  throw new Error("Not a V8 null");
+  if (data[0] !== 0x30) throw new Error("Not a V8 null");
+  // Consume bytes (this is so that we don't need to pass a offset to the next deserialize function)
+  consume(data, 1);
+  return null;
 }

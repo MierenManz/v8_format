@@ -8,10 +8,10 @@ representation back to a js value used by the [V8 Engine](https://v8.dev).
 
 The format always starts with 2 header bytes `0xFF 0x0F` Then it will use a
 indicator byte to tell the deserializer on how to deserialize the next section
-of bytes. All format examples include the 2 header bytes but these are only
-needed at the beginning of the whole serialized data, not per format. The
-reference serializers and deserializers don't include these bytes and only have
-to be checked to be valid.
+of bytes. None of the format examples include the 2 header bytes but these are
+needed at the beginning of the serialized data. The reference serializers and
+deserializers don't include these bytes. But the `serialize` and `deserialize`
+api's in `references/mod.ts` do add these bytes
 
 ## Primitive Types
 
@@ -25,11 +25,11 @@ Primitive values are the following values:
 - [null](#null-format)
 - [undefined](#undefined-format)
 
-Null is also included in this list eventho they're technically objects. The
-difference between a primitive and a object is for example how they're passed as
-function argument. It is handy to know the difference because objects have a few
-quirks that primitives don't. But we'll get into that later in the
-[Object Types](#object-types) section.
+Null is also included in this list eventho it's technically a object but works
+like a primitive. The difference between a primitive and a object is for example
+how they're passed as function argument. It is handy to know the difference
+because objects have a few quirks that primitives don't. But we'll get into that
+later in the [Object Types](#object-types) section.
 
 ### String Formats
 
@@ -59,7 +59,6 @@ string and then the raw data.
 serializing a string like `HelloWorld` this will look like this.
 
 ```
-0xFF  0x0F    Magic bytes
 0x22  0x0A    String indicator byte and varint encoded length
 0x48  0x65    He
 0x6C  0x6C    ll
@@ -80,7 +79,6 @@ multiple bytes. Like emoji's or non-latin languages like arabic
 serializing `Hi!😃`
 
 ```
-0xFF  0x0F    Magic bytes
 0x63  0x0A    String indicator byte and varint encoded length
 0x48  0x00    H (UTF-8 characters don't need a second byte. Therefore null byte)
 0x69  0x00    i
@@ -112,14 +110,12 @@ some examples
 Negative Integer -12
 
 ```
-0xFF  0x0F    Magic bytes
 0x49  0x17    Indicator byte then zigzag encoded + varint encoded value
 ```
 
 Positive Integer 12
 
 ```
-0xFF  0x0F    Magic bytes
 0x49  0x18    Indicator byte then zigzag encoded + varint encoded value
 ```
 
@@ -145,7 +141,6 @@ a unknown size
 Negative BigInt -12
 
 ```
-0xFF  0x0F    Magic bytes
 0x5A  0x11    BigInt indicator byte and Varint bitfield.
 0x0C  0x00    Bigint value...
 0x00  0x00
@@ -156,7 +151,6 @@ Negative BigInt -12
 Positive BigInt 12
 
 ```
-0xFF  0x0F    Magic bytes
 0x5A  0x10    BigInt indicator byte and Varint bitfield.
 0x0C  0x00    Bigint value...
 0x00  0x00
@@ -176,7 +170,6 @@ float format is by far the easiest one to understand. You only have an indicator
 byte `N` (0x4E) and then the float value as 64 bit float (or double)
 
 ```
-0xFF  0x0F    Magic bytes
 0x4E  0x00    Indicator byte and first byte of the 64 bit float
 0x00  0x00    bytes of the float(12.69)
 0x00  0x00
@@ -193,14 +186,12 @@ value and type. `F` (0x46) and `T` (0x54) Are the boolean type indicators where
 False
 
 ```
-0xFF  0x0F    Magic bytes
 0x46          Indicator byte False
 ```
 
 True
 
 ```
-0xFF  0x0F    Magic bytes
 0x54          Indicator byte True
 ```
 
@@ -210,7 +201,6 @@ The null format is effectively the same as the boolean format. Just that the
 indicator byte changed to `0` (0x30).
 
 ```
-0xFF  0x0F    Magic bytes
 0x30          Indicator byte Null
 ```
 
@@ -220,24 +210,23 @@ Let's repeat the easiest format once again. For `undefined` the format is still
 the same as null and booleans but the byte changed once again to `_` (0x5F)
 
 ```
-0xFF  0x0F    Magic bytes
 0x5F          Indicator byte Undefined
 ```
 
-## Object Types
+## Referable Types
 
-Object types are a lot more complex than meets the eye. It looks fairly simple
-until you realise that javascript is a quirky language that allows things like
-associative arrays and arrays where there are empty elements or referencing a
-object in itself creating recursive references. This makes (de)serializing
-objects a lot more complex than a simple primitive. Luckily not all objects work
-with the format tho. Only the following work
+Referable types are a lot more complex than meets the eye. It looks fairly
+simple until you realise that javascript is a quirky language that allows things
+like associative arrays and arrays where there are empty elements or referencing
+a object in itself creating recursive references. This makes (de)serializing
+referable types a lot more complex than a simple primitive. For external use of
+the v8 format the following referable types work with it.
 
 - [Object References](#object-references)
-- Array
-- Object literals
-- User created classes
-- ArrayBuffer
+- [Array](#array)
+- [Object literals](#classes--plain-objects)
+- [User created classes](#classes--plain-objects)
+- [ArrayBuffer](#arraybuffer)
 - Uint*Array (where * is 8, 16, 32 or 64)
 - Int*Array (where * is 8, 16, 32 or 64)
 - Map
@@ -245,9 +234,14 @@ with the format tho. Only the following work
 - Date
 - Regex
 - Error
+
+These do not work outside of v8 or v8 bindings due to them serializing into a ID
+that v8 holds the value for.
+
 - SharedArrayBuffer (not usable outside v8)
 - WebAssembly.Module (not usable outside v8)
-- WebAssembly.Memory (not usable outside v8)
+- WebAssembly.Memory (not usable outside v8) (only serializable when
+  `shared = true`)
 
 ### Object References
 
@@ -274,3 +268,136 @@ specific example because both values reference the same object. If the object
 has 2 identical objects like 2x `{}` then it will not use a reference because
 they're not the same object but rather 2 individuals that have the same inner
 values and structure.
+
+### Array
+
+Arrays are a lot more complex than meets the eye. They can do quite a few quirky
+things like indexing then with strings `myArray["HelloWorld"] = 12;`. But they
+also allow empty slots. An empty slot is unique. It's not filled with anything
+like `null` or `undefined` (it does map to undefined) but there is nothing.
+Which we need to keep in mind when (de)serializing an array. We effectively got
+4 types of arrays to keep in mind (you could argue that there are 5. Which is
+only a associated array without any regular slots. But this would be the same as
+a dense associated array)
+
+1. Dense Array (all allocated slots are occupied)
+2. Sparse Array (some allocated slots are not used)
+3. Dense Associated Array (all allocated slots are occupied & some values are
+   indexed by strings)
+4. Sparse Associated Array (some allocated slots are not used & some values are
+   indexed by strings)
+
+Dense Array `[null, null]`
+
+```
+0x41  0x02    Dense array indicator byte + varint encoded array length
+0x30  0x30    null null
+0x24  0x00    Ending byte + varint encoded kv pair length
+0x02          Varint encoded slot count (array length)
+```
+
+Sparse Array `[null, ,null]`
+
+```
+0x61  0x03    Sparse array indicator byte + varint encoded array length
+0x49  0x00    Integer indicator byte + varint encoded index
+0x30  0x49    null + Integer indicator byte
+0x04  0x30    varint encoded index + null
+0x40  0x02    Ending byte + varint encoded kv pairs length
+0x03          Varint encoded slot count (array length)
+```
+
+Dense Associated Array `const arr = [null, null]; arr["k"] = null;`
+
+```
+0x41  0x02    Dense array indicator byte + varint encoded array length
+0x30  0x30    null null
+0x22  0x01    string indicator byte + varint encoded string length
+0x6B  0x30    key "k" + null
+0x24  0x01    Ending byte + varint encoded kv pair length
+0x02          Varint encoded slot count (array length)
+```
+
+Sparse Array `const arr = [null, ,null]; arr["k"] = null;`
+
+```
+0x61  0x03    Sparse array indicator byte + varint encoded array length
+0x49  0x00    Integer indicator byte + varint encoded index
+0x30  0x49    null + Integer indicator byte
+0x04  0x30    varint encoded index + null
+0x22  0x01    string indicator byte + varint encoded string length
+0x6B  0x30    key "k" + null
+0x40  0x03    Ending byte + varint encoded kv pairs length
+0x03          Varint encoded slot count (array length)
+```
+
+### Classes & Plain Objects
+
+Classes and plain objects are the same to v8's binary format. They both have the
+indicator byte 0x6F `o` and ending byte 0x7B `{`. They're both just key value
+pairs that are kinda similar to associative arrays. The difference being that
+each value has a key. Which is not always the case with associative arrays (if
+they're dense for example). In all other ways they're pretty much the same. One
+thing that is special about objects is that string keys that can be integers
+will be stored as integers. so an object like this `{ "12": null }` will have 12
+as a integer rather than a string
+
+empty object `{}`
+
+```
+0x6F  0x7B    Object Indicator byte `o` & Ending byte `{`
+0x00          Varint encoded kv pair count
+```
+
+object with string keys `{ k: null }`
+
+```
+0x6F  0x22    Object indicator byte `o` & string indicator byte `"`
+0x01  0x6B    Varint encoded string length & byte `0x6B` key `k`
+0x30  0x7B    Value null & ending byte
+0x01          Varint encoded kv pair count
+```
+
+object with integer keys `{ 12: null, "13": null }`
+
+```
+0x6F  0x49    Object indicator byte `o` & signed int indicator byte `I`
+0x18  0x30    Varint encoded integer as key and null as value
+0x49  0x1A    Signed int indicator byte `I` & integer as key
+0x30  0x7B    Null as value & ending byte
+0x02          Varint encoded kv pair count
+```
+
+object with string & integer keys `{ k: null, 12: null, "13": null }`
+
+```
+0x6F  0x49    Object indicator byte `o` & signed int indicator byte `I`
+0x18  0x30    Varint encoded integer as key and null as value
+0x49  0x1A    Signed int indicator byte `I` & integer as key
+0x30  0x22    Null as value & string indicator byte
+0x01  0x6B    Varint encoded string length & byte `k`
+0x30  0x7B    Null as value & ending byte
+0x03          Varint encoded kv pair count
+```
+
+### ArrayBuffer
+
+`ArrayBuffer` is the raw datastore for typed array's like `Uint8Array`. You
+cannot interact with it directly. But only via `DataView` or a typed array. It's
+indicator byte is 0x42 `B`
+
+empty ArrayBuffer(4)
+
+```
+0x42 0x04    ArrayBuffer indicator byte `B` & varint encoded length
+0x00 0x00    Bytes in the ArrayBuffer
+0x00 0x00    Bytes in the ArrayBuffer
+```
+
+ArrayBuffer with content `[1,2,3,4]`
+
+```
+0x42 0x04    ArrayBuffer indicator byte `B` & varint encoded length
+0x01 0x02    Bytes in de ArrayBuffer
+0x03 0x04    Bytes in de ArrayBuffer
+```
