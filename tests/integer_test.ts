@@ -128,9 +128,16 @@ Deno.test({
     });
 
     await t.step({
-      name: "Serialize non Integer",
+      name: "Serialize Bad Integer",
+      fn: function() {
+        assertThrows(() => serializeJsInteger(MAX_INT_VALUE + 2));
+      }
+    })
+
+    await t.step({
+      name: "Serialize Non Integer",
       fn: function () {
-        assertThrows(() => serializeJsInteger(null as unknown as number));
+        assertThrows(() => serializeJsInteger(null as unknown as number), undefined, "Not a integer");
       },
     });
   },
