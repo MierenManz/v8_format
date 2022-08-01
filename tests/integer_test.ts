@@ -129,15 +129,19 @@ Deno.test({
 
     await t.step({
       name: "Serialize Bad Integer",
-      fn: function() {
+      fn: function () {
         assertThrows(() => serializeJsInteger(MAX_INT_VALUE + 2));
-      }
-    })
+      },
+    });
 
     await t.step({
       name: "Serialize Integer: Non-Integer",
       fn: function () {
-        assertThrows(() => serializeJsInteger(null as unknown as number), undefined, "Not a integer");
+        assertThrows(
+          () => serializeJsInteger(null as unknown as number),
+          undefined,
+          "Not a integer",
+        );
       },
     });
   },
