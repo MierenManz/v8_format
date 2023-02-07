@@ -2,7 +2,7 @@ import { assertEquals, assertThrows } from "./_deps.ts";
 import {
   deserializeV8Boolean,
   serializeJsBoolean,
-} from "../references/boolean.ts";
+} from "../src/boolean.ts";
 import { DENO_CORE } from "./_core.ts";
 
 Deno.test({

@@ -1,4 +1,4 @@
-import { deserializeV8Float, serializeJsFloat } from "../references/float.ts";
+import { deserializeV8Float, serializeJsFloat } from "../src/float.ts";
 import { DENO_CORE } from "./_core.ts";
 import { assertEquals, assertThrows } from "./_deps.ts";
 

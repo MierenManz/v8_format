@@ -2,7 +2,7 @@ import { assertEquals, assertThrows } from "./_deps.ts";
 import {
   deserializeV8Undefined,
   serializeJsUndefined,
-} from "../references/undefined.ts";
+} from "../src/undefined.ts";
 import { DENO_CORE } from "./_core.ts";
 
 Deno.test({

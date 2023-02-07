@@ -65,10 +65,10 @@ export function associativeArray<T>(baseArray: T[]): T[] {
 }
 
 export function mixedArray<T>(dense: boolean): T[] {
-  const arr = dense ? denseArray() : sparseArray();
+  const arr: T[] = dense ? denseArray() : sparseArray();
   associativeArray(arr);
 
-  return arr as T[];
+  return arr;
 }
 
 // deno-lint-ignore ban-types

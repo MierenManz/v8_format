@@ -1,7 +1,7 @@
 import {
   deserializeV8String,
   serializeJsString,
-} from "../references/string.ts";
+} from "../src/string.ts";
 import { assertEquals, assertThrows } from "./_deps.ts";
 import { DENO_CORE } from "./_core.ts";
 

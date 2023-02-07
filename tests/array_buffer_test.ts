@@ -2,7 +2,7 @@ import { assertEquals, assertThrows } from "./_deps.ts";
 import {
   deserializeArrayBuffer,
   serializeArrayBuffer,
-} from "../references/array_buffer.ts";
+} from "../src/array_buffer.ts";
 import { DENO_CORE } from "./_core.ts";
 
 Deno.test({

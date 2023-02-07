@@ -2,7 +2,7 @@ import { assertEquals, assertThrows } from "./_deps.ts";
 import {
   deserializeV8Integer,
   serializeJsInteger,
-} from "../references/integer.ts";
+} from "../src/integer.ts";
 import { DENO_CORE } from "./_core.ts";
 
 const MIN_INT_VALUE = -1_073_741_824;

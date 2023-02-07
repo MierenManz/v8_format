@@ -2,7 +2,7 @@ import { assertEquals, assertThrows } from "./_deps.ts";
 import {
   deserializeV8BigInt,
   serializeJsBigInt,
-} from "../references/bigint.ts";
+} from "../src/bigint.ts";
 import { DENO_CORE } from "./_core.ts";
 
 Deno.test({

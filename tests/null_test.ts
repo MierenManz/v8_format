@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "./_deps.ts";
-import { deserializeV8Null, serializeJsNull } from "../references/null.ts";
+import { deserializeV8Null, serializeJsNull } from "../src/null.ts";
 import { DENO_CORE } from "./_core.ts";
 
 Deno.test({

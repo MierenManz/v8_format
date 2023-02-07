@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "./_deps.ts";
-import { deserializeV8Array, serializeJsArray } from "../references/array.ts";
+import { deserializeV8Array, serializeJsArray } from "../src/array.ts";
 import { DENO_CORE } from "./_core.ts";
 import {
   associativeArray,
