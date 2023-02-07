@@ -93,14 +93,18 @@ V8 has 2 integer formats one is unsigned integer and the other one signed. It
 appears that usually signed integers are used even when unsigned integers can be
 used.
 
-I am not entirely sure when unsigned integers are used.
-Signed integers are stored as SMI's. These are 30 bit integers so where are the rest?
-The other 2 bits are used as SMI flag internally and the other as sign bit. This does not mean that we are limited to 32 bits though. If the value is outside of the SMI range (-1_073_741_824 - 1_073_741_823) then it will use a float to store the int value
+I am not entirely sure when unsigned integers are used. Signed integers are
+stored as SMI's. These are 30 bit integers so where are the rest? The other 2
+bits are used as SMI flag internally and the other as sign bit. This does not
+mean that we are limited to 32 bits though. If the value is outside of the SMI
+range (-1_073_741_824 - 1_073_741_823) then it will use a float to store the int
+value
 
 #### Signed Integer Format
 
 The integer format of v8 is quite simple but confusing at first. It uses varint
-encoding for all signed integers. However it does not use the LEB128 signed varint. Instead it uses the zigzag algorithm used in protobufs.
+encoding for all signed integers. However it does not use the LEB128 signed
+varint. Instead it uses the zigzag algorithm used in protobufs.
 
 some examples
 
@@ -125,6 +129,7 @@ Do note that this format is not compatible with the Signed integer format
 because positive integers in that format also get zigzag encoded.
 
 Selfnotes:
+
 - Might be found when using JIT compiled functions.
 - Might be used when SMI's are at hand.
 
