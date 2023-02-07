@@ -1,7 +1,4 @@
-import {
-  deserializeV8Integer,
-  serializeJsInteger,
-} from "../references/integer.ts";
+import { deserializeV8Integer, serializeJsInteger } from "../src/integer.ts";
 import { DENO_CORE } from "../tests/_core.ts";
 
 const INPUT = Math.random() * 100 | 0;

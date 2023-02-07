@@ -1,7 +1,7 @@
 import {
   deserializeV8Undefined,
   serializeJsUndefined,
-} from "../references/undefined.ts";
+} from "../src/undefined.ts";
 import { DENO_CORE } from "../tests/_core.ts";
 
 Deno.bench({

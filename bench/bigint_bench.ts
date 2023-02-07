@@ -1,7 +1,4 @@
-import {
-  deserializeV8BigInt,
-  serializeJsBigInt,
-} from "../references/bigint.ts";
+import { deserializeV8BigInt, serializeJsBigInt } from "../src/bigint.ts";
 import { DENO_CORE } from "../tests/_core.ts";
 
 const INPUT = BigInt(Number.MAX_VALUE);

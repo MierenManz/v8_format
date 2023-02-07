@@ -1,4 +1,4 @@
-import { deserializeV8Null, serializeJsNull } from "../references/null.ts";
+import { deserializeV8Null, serializeJsNull } from "../src/null.ts";
 import { DENO_CORE } from "../tests/_core.ts";
 
 Deno.bench({

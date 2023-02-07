@@ -1,7 +1,4 @@
-import {
-  deserializeV8String,
-  serializeJsString,
-} from "../references/string.ts";
+import { deserializeV8String, serializeJsString } from "../src/string.ts";
 import { DENO_CORE } from "../tests/_core.ts";
 
 const INPUT = "Hello Beautiful World!";

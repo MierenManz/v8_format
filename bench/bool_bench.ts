@@ -1,7 +1,4 @@
-import {
-  deserializeV8Boolean,
-  serializeJsBoolean,
-} from "../references/boolean.ts";
+import { deserializeV8Boolean, serializeJsBoolean } from "../src/boolean.ts";
 import { DENO_CORE } from "../tests/_core.ts";
 
 Deno.bench({

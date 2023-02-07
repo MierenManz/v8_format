@@ -17,9 +17,7 @@ export function serializeAny(value: any, objRefs: {}[] = []): Uint8Array {
     case "boolean":
       return serializeJsBoolean(value);
     case "number": {
-      return isSMI(value)
-        ? serializeJsInteger(value)
-        : serializeJsFloat(value);
+      return isSMI(value) ? serializeJsInteger(value) : serializeJsFloat(value);
     }
 
     case "string":

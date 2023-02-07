@@ -1,4 +1,4 @@
-import { deserializeV8Array, serializeJsArray } from "../references/array.ts";
+import { deserializeV8Array, serializeJsArray } from "../src/array.ts";
 import { DENO_CORE } from "../tests/_core.ts";
 import { associativeArray, denseArray, sparseArray } from "../tests/_util.ts";
 const DENSE_ARRAY = denseArray();
