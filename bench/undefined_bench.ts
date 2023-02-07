@@ -17,7 +17,7 @@ Deno.bench({
   name: "Serialize Undefined (js)",
   group: "Serialize",
   fn: () => {
-    serializeJsUndefined();
+    serializeJsUndefined(undefined);
   },
 });
 
