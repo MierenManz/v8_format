@@ -93,17 +93,14 @@ V8 has 2 integer formats one is unsigned integer and the other one signed. It
 appears that usually signed integers are used even when unsigned integers can be
 used.
 
-I am not entirely sure when unsigned integers are used. Not only is this a small
-quirk but due to the max value of a varint we don't get the full i32 range to
-work with. But rather a range of `-1_073_741_824` (inclusive) up to
-`1_073_741_823` (inclusive) Outside of this range the float format will be used!
+I am not entirely sure when unsigned integers are used.
+Signed integers are stored as SMI's. These are 30 bit integers so where are the rest?
+The other 2 bits are used as SMI flag internally and the other as sign bit. This does not mean that we are limited to 32 bits though. If the value is outside of the SMI range (-1_073_741_824 - 1_073_741_823) then it will use a float to store the int value
 
 #### Signed Integer Format
 
 The integer format of v8 is quite simple but confusing at first. It uses varint
-encoding for all signed integers. If you have ever worked with varint then you
-know that this is not possible with varint. So to avoid this trouble we first
-zigzag encode integers and then we encode it into a varint.
+encoding for all signed integers. However it does not use the LEB128 signed varint. Instead it uses the zigzag algorithm used in protobufs.
 
 some examples
 
@@ -127,8 +124,9 @@ not get zig-zag encoded unlike the signed integers.\
 Do note that this format is not compatible with the Signed integer format
 because positive integers in that format also get zigzag encoded.
 
-(this still needs a example once I know where v8 uses this format (selfnote:
-Might be found when using JIT compiled functions. Needs triage))
+Selfnotes:
+- Might be found when using JIT compiled functions.
+- Might be used when SMI's are at hand.
 
 ### BigInt Format
 
@@ -401,3 +399,5 @@ ArrayBuffer with content `[1,2,3,4]`
 0x01 0x02    Bytes in de ArrayBuffer
 0x03 0x04    Bytes in de ArrayBuffer
 ```
+
+### Typed Arrays
