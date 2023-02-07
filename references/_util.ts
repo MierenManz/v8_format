@@ -1,5 +1,5 @@
-const MIN_INT_VALUE = -1_073_741_824;
-const MAX_INT_VALUE = 1_073_741_823;
+const MAX_SMI_VAL = (1 << 30) - 1;
+const MIN_SMI_VAL = -(1 << 30);
 
 export interface ArrayMetadata {
   isSparse: boolean;
@@ -31,18 +31,15 @@ export function arrayMetadata<T>(array: T[]): ArrayMetadata {
  */
 export function strIsIntIndex(val: string): boolean {
   const valAsInt = parseInt(val);
-  return !Number.isNaN(valAsInt) &&
-    valAsInt >= MIN_INT_VALUE &&
-    valAsInt <= MAX_INT_VALUE &&
-    valAsInt === parseFloat(val);
+  return isSMI(valAsInt) && valAsInt === parseFloat(val);
 }
 
-export function isValidInt(val: number): boolean {
+export function isSMI(val: number): boolean {
   const valAsInt = val | 0;
   return valAsInt === val &&
     !Number.isNaN(valAsInt) &&
-    valAsInt >= MIN_INT_VALUE &&
-    valAsInt <= MAX_INT_VALUE;
+    valAsInt >= MIN_SMI_VAL &&
+    valAsInt <= MAX_SMI_VAL;
 }
 
 /**
