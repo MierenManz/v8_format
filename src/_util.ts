@@ -27,8 +27,7 @@ export function arrayMetadata<T>(array: T[]): ArrayMetadata {
  * Object keys that are strings should sometimes be serialized into integers if they can be a valid v8 signed integer.
  */
 export function strIsIntIndex(val: string): boolean {
-  const valAsInt = parseInt(val);
-  return isSMI(valAsInt) && valAsInt === parseFloat(val);
+  return isSMI(parseFloat(val));
 }
 
 export function isSMI(val: number): boolean {
