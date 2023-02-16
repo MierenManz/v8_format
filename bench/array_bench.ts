@@ -6,6 +6,8 @@ const SPARSE_ARRAY = sparseArray();
 const ASSOCIATIVE_DENSE_ARRAY = associativeArray(denseArray());
 const ASSOCIATIVE_SPARSE_ARRAY = associativeArray(sparseArray());
 
+Deno.bench("nop", () => {});
+
 Deno.bench({
   name: "Serialize Dense Array (v8)",
   group: "Serialize Dense",

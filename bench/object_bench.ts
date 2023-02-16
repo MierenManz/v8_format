@@ -4,6 +4,8 @@ import { fullObject } from "../tests/_util.ts";
 
 const INPUT = fullObject();
 
+Deno.bench("nop", () => {});
+
 Deno.bench({
   name: "Serialize Object (v8)",
   group: "Serialize",

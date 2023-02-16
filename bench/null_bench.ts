@@ -1,6 +1,8 @@
 import { deserializeV8Null, serializeJsNull } from "../src/null.ts";
 import { DENO_CORE } from "../tests/_core.ts";
 
+Deno.bench("nop", () => {});
+
 Deno.bench({
   name: "Serialize Null (v8)",
   group: "Serialize",
@@ -9,7 +11,7 @@ Deno.bench({
     DENO_CORE.serialize(null);
   },
 });
-undefined;
+
 Deno.bench({
   name: "Serialize Null (js)",
   group: "Serialize",

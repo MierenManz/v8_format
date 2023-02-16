@@ -3,6 +3,8 @@ import { DENO_CORE } from "../tests/_core.ts";
 
 const INPUT = Math.random() * 100;
 
+Deno.bench("nop", () => {});
+
 Deno.bench({
   name: "Serialize Float (v8)",
   group: "Serialize",

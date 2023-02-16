@@ -4,6 +4,8 @@ import { DENO_CORE } from "../tests/_core.ts";
 const INPUT = "Hello Beautiful World!";
 const INPUT2 = "Hello Parking meter 😃";
 
+Deno.bench("nop", () => {});
+
 Deno.bench({
   name: "Serialize String (v8)",
   group: "Serialize",

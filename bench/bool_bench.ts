@@ -1,6 +1,8 @@
 import { deserializeV8Boolean, serializeJsBoolean } from "../src/boolean.ts";
 import { DENO_CORE } from "../tests/_core.ts";
 
+Deno.bench("nop", () => {});
+
 Deno.bench({
   name: "Serialize Boolean (v8)",
   group: "Serialize",

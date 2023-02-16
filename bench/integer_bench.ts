@@ -5,6 +5,8 @@ const INPUT = Math.random() * 100 | 0;
 const MIN_INT_VALUE = -1_073_741_824;
 const MAX_INT_VALUE = 1_073_741_823;
 
+Deno.bench("nop", () => {});
+
 Deno.bench({
   name: "Serialize Integer (v8)",
   group: "Serialize",
