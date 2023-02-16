@@ -8,22 +8,19 @@ export interface ArrayMetadata {
 }
 
 export function arrayMetadata<T>(array: T[]): ArrayMetadata {
-  const metadata = {
-    isSparse: false,
-    indexedLength: 0,
-    unindexedLength: 0,
+  const [indexedLength, unindexedLength] = Object.keys(array).reduce(
+    (acc, cur) => {
+      acc[strIsIntIndex(cur) ? 0 : 1]++;
+      return acc;
+    },
+    [0, 0],
+  );
+
+  return {
+    isSparse: indexedLength !== array.length,
+    indexedLength: indexedLength,
+    unindexedLength: unindexedLength,
   };
-
-  for (const key in array) {
-    if (!strIsIntIndex(key)) {
-      metadata.unindexedLength++;
-      continue;
-    }
-    metadata.indexedLength++;
-  }
-
-  metadata.isSparse = metadata.indexedLength !== array.length;
-  return metadata;
 }
 
 /**

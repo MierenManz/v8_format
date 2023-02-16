@@ -17,7 +17,7 @@ Deno.bench({
   name: "Serialize Object (js)",
   group: "Serialize",
   fn: () => {
-    serializeJsObject(INPUT);
+    serializeJsObject(INPUT, []);
   },
 });
 
@@ -36,6 +36,6 @@ Deno.bench({
   group: "Deserialize",
   fn: () => {
     const buff = DENO_CORE.serialize(INPUT).subarray(2);
-    deserializeV8Object(buff);
+    deserializeV8Object(buff, []);
   },
 });
