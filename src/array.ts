@@ -29,22 +29,21 @@ export function serializeJsArray<T>(
   const indexedValuesVarint = varintEncode(array.length)[0];
   const serializedValues = [
     Uint8Array.of(indicatorByte),
-    indexedValuesVarint,
+    indexedValuesVarint
   ];
 
-  let count = 0;
-  for (const key in array) {
-    // If key is not a valid v8 integer then serialize it as string.
-    // Else if array is sparse serialize as v8 integer
-    if (count >= metadata.indexedLength) {
+  const arrayKeys = Object.keys(array);
+  const len = arrayKeys.length;
+  for (let i = 0; i < len; i++) {
+    const key = arrayKeys[i];
+    if (i >= metadata.indexedLength) {
       serializedValues.push(serializeJsString(key));
     } else if (metadata.isSparse) {
       serializedValues.push(serializeJsInteger(parseInt(key)));
     }
-    count++;
 
     // Serialize value
-    const value = array[key];
+    const value = array[key as unknown as number];
 
     // If object already serialized. Just put in a reference
     const refIndex = objRefs.findIndex((x) => value === x);
@@ -58,6 +57,8 @@ export function serializeJsArray<T>(
 
   // varint encode amount of kvPairs
   const kvPairsVarint = varintEncode(
+    // This is faster for sparsed associative array
+    // (Number(metadata.isSparse) * metadata.indexedLength) + metadata.unindexedLength
     metadata.isSparse
       ? metadata.indexedLength + metadata.unindexedLength
       : metadata.unindexedLength,
@@ -76,11 +77,11 @@ export function serializeJsArray<T>(
   const serializedArray = new Uint8Array(length);
 
   // Copy all Uint8Array's in `serializedValues` into `serializedArray`
-  serializedValues.reduce((ptr, current) => {
-    // Copy current dataslice to ptr
-    serializedArray.set(current, ptr);
-    return ptr + current.length;
-  }, 0);
+  for (let i = 0, offset = 0; i < serializedValues.length; i++) {
+    const current = serializedValues[i];
+    serializedArray.set(current, offset);
+    offset += current.length;
+  }
 
   // Return
   return serializedArray;
