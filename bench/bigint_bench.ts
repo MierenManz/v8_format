@@ -3,6 +3,8 @@ import { DENO_CORE } from "../tests/_core.ts";
 
 const INPUT = BigInt(Number.MAX_VALUE);
 
+Deno.bench("nop", () => {});
+
 Deno.bench({
   name: "Serialize BigInt (v8)",
   group: "Serialize",

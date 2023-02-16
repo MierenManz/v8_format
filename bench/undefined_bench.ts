@@ -4,6 +4,8 @@ import {
 } from "../src/undefined.ts";
 import { DENO_CORE } from "../tests/_core.ts";
 
+Deno.bench("nop", () => {});
+
 Deno.bench({
   name: "Serialize Undefined (v8)",
   group: "Serialize",

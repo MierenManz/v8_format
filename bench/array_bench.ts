@@ -1,6 +1,9 @@
 import { deserializeV8Array, serializeJsArray } from "../src/array.ts";
 import { DENO_CORE } from "../tests/_core.ts";
 import { associativeArray, denseArray, sparseArray } from "../tests/_util.ts";
+
+Deno.bench("nop", () => {});
+
 const DENSE_ARRAY = denseArray();
 const SPARSE_ARRAY = sparseArray();
 const ASSOCIATIVE_DENSE_ARRAY = associativeArray(denseArray());

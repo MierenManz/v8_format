@@ -2,6 +2,8 @@ import { deserializeV8Object, serializeJsObject } from "../src/objects.ts";
 import { DENO_CORE } from "../tests/_core.ts";
 import { fullObject } from "../tests/_util.ts";
 
+Deno.bench("nop", () => {});
+
 const INPUT = fullObject();
 
 Deno.bench({

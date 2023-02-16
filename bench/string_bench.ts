@@ -1,6 +1,8 @@
 import { deserializeV8String, serializeJsString } from "../src/string.ts";
 import { DENO_CORE } from "../tests/_core.ts";
 
+Deno.bench("nop", () => {});
+
 const INPUT = "Hello Beautiful World!";
 const INPUT2 = "Hello Parking meter 😃";
 
