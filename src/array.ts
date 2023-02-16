@@ -29,7 +29,7 @@ export function serializeJsArray<T>(
   const indexedValuesVarint = varintEncode(array.length)[0];
   const serializedValues = [
     Uint8Array.of(indicatorByte),
-    indexedValuesVarint
+    indexedValuesVarint,
   ];
 
   const arrayKeys = Object.keys(array);
