@@ -23,7 +23,6 @@ Deno.bench({
   },
 });
 
-
 Deno.bench({
   name: "Deserialize Undefined (v8)",
   group: "Deserialize",

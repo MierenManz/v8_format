@@ -1,7 +1,4 @@
-import {
-  deserializeV8Object,
-  serializeJsObject,
-} from "../src/objects.ts";
+import { deserializeV8Object, serializeJsObject } from "../src/objects.ts";
 import { DENO_CORE } from "./_core.ts";
 import { fullObject } from "./_util.ts";
 import { assertEquals, assertThrows } from "./_deps.ts";
