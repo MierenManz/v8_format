@@ -1,5 +1,5 @@
 import { assertThrows } from "./_deps.ts";
-import { deserializeReference } from "../references/object_reference.ts";
+import { deserializeReference } from "../src/object_reference.ts";
 import { DENO_CORE } from "./_core.ts";
 
 Deno.test({
