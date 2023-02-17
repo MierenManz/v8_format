@@ -20,12 +20,12 @@ Deno.bench({
   },
 });
 
-const SERIALIZED_NULL = DENO_CORE.serialize(null);
 Deno.bench({
   name: "Deserialize Null (v8)",
   group: "Deserialize",
   baseline: true,
   fn: () => {
+    const SERIALIZED_NULL = DENO_CORE.serialize(null);
     DENO_CORE.deserialize(SERIALIZED_NULL);
   },
 });
@@ -34,6 +34,7 @@ Deno.bench({
   name: "Deserialize Null (js)",
   group: "Deserialize",
   fn: () => {
-    deserializeV8Null(serializeJsNull(null));
+    const SERIALIZED_NULL = DENO_CORE.serialize(null).subarray(2);
+    deserializeV8Null(SERIALIZED_NULL);
   },
 });

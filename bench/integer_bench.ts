@@ -1,6 +1,8 @@
 import { deserializeV8Integer, serializeJsInteger } from "../src/integer.ts";
 import { DENO_CORE } from "../tests/_core.ts";
 
+Deno.bench("nop", () => {});
+
 const INPUT = Math.random() * 100 | 0;
 const MIN_INT_VALUE = -1_073_741_824;
 const MAX_INT_VALUE = 1_073_741_823;

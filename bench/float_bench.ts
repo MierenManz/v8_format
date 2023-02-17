@@ -1,6 +1,8 @@
 import { deserializeV8Float, serializeJsFloat } from "../src/float.ts";
 import { DENO_CORE } from "../tests/_core.ts";
 
+Deno.bench("nop", () => {});
+
 const INPUT = Math.random() * 100;
 
 Deno.bench("nop", () => {});

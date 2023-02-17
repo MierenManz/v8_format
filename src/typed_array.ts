@@ -3,7 +3,7 @@ import {
   deserializeArrayBuffer,
   serializeArrayBuffer,
 } from "./array_buffer.ts";
-import { consume } from "./_util.ts";
+import { consume as _ } from "./_util.ts";
 
 type UnsignedTypedArray =
   | Uint8ClampedArray
